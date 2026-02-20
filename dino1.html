@@ -16,6 +16,15 @@
     <button onclick="location.reload()">Back to Home</button>
 
     <script>
+    // High score system
+    const GAME_KEY = 'dino';
+    function getHighScore() {
+        return Number(localStorage.getItem(GAME_KEY + '_highscore') || 0);
+    }
+    function saveHighScore(score) {
+        localStorage.setItem(GAME_KEY + '_highscore', score);
+    }
+
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
     const scoreDisplay = document.getElementById("score");
@@ -88,7 +97,16 @@
                dino.y < ob.y + ob.height &&
                dino.y + dino.height > ob.y) {
                 gameOver = true;
-                alert("Game Over! Score: " + score);
+                const high = getHighScore();
+                let msg = `Game Over! Score: ${score}`;
+                if (score > high) {
+                    saveHighScore(score);
+                    msg += `\nNew High Score! 🎉`;
+                } else {
+                    msg += `\nHigh Score: ${high}`;
+                }
+                alert(msg);
+                return;
             }
 
             // Update score
