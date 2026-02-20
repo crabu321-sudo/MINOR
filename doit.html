@@ -12,16 +12,20 @@
     <h2>Car Dodge Game</h2>
     <canvas id="carCanvas" width="400" height="500"></canvas>
     <p>Score: <span id="score">0</span></p>
+    <p>High Score: <span id="highScore">0</span></p>
     <button onclick="location.reload()">Restart Game</button>
 
     <script>
     const canvas = document.getElementById("carCanvas");
     const ctx = canvas.getContext("2d");
     const scoreDisplay = document.getElementById("score");
+    const highScoreDisplay = document.getElementById("highScore");
 
     const car = { x: 170, y: 450, width: 60, height: 100, dx: 15 };
     const obstacles = [];
     let score = 0;
+    let highScore = parseInt(localStorage.getItem('carDodgeHighScore')) || 0;
+    highScoreDisplay.textContent = highScore;
     let speed = 3;
     let gameOver = false;
 
@@ -73,7 +77,14 @@
             // Check collision
             if(car.x < ob.x+ob.width && car.x+car.width > ob.x && car.y < ob.y+ob.height && car.y+car.height > ob.y){
                 gameOver=true;
-                alert("Game Over! Score: "+score);
+                if (score > highScore) {
+                    highScore = score;
+                    localStorage.setItem('carDodgeHighScore', highScore);
+                    highScoreDisplay.textContent = highScore;
+                    alert("New High Score! " + score);
+                } else {
+                    alert("Game Over! Score: " + score + "\nHigh Score: " + highScore);
+                }
             }
             else if(ob.y > canvas.height){
                 obstacles.splice(i,1);
