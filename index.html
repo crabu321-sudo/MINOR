@@ -4,14 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>My Gaming Platform</title>
-
     <style>
         :root {
             --cyan: #00ffff;
             --dark: #0f2027;
             --mid: #203a43;
         }
-
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -22,20 +20,17 @@
             min-height: 100vh;
             overflow-x: hidden;
         }
-
         @keyframes gradientBG {
-            0%   { background-position: 0% 50%; }
-            50%  { background-position: 100% 50%; }
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-
         canvas#bg {
             position: fixed;
             top: 0; left: 0;
             z-index: -1;
             pointer-events: none;
         }
-
         header {
             background: rgba(0,0,0,0.65);
             backdrop-filter: blur(6px);
@@ -46,12 +41,10 @@
             border-bottom: 1px solid rgba(0,255,255,0.18);
             animation: fadeIn 1.4s ease-out;
         }
-
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-30px); }
-            to   { opacity: 1; transform: translateY(0); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
         .games-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -60,7 +53,6 @@
             max-width: 1400px;
             margin: 0 auto;
         }
-
         .game-card {
             background: rgba(0,0,0,0.58);
             border-radius: 16px;
@@ -72,18 +64,15 @@
             backdrop-filter: blur(5px);
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
-
         .game-card:hover {
             transform: translateY(-12px) scale(1.06);
             box-shadow: 0 12px 35px rgba(0, 255, 255, 0.28);
             border-color: var(--cyan);
         }
-
         .game-card:active {
             transform: translateY(-4px) scale(0.98);
             transition: all 0.12s ease;
         }
-
         .game-image {
             height: 160px;
             background: linear-gradient(135deg, #141e30, #1e3a5f);
@@ -96,31 +85,26 @@
             position: relative;
             overflow: hidden;
         }
-
         .game-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.4s ease;
         }
-
         .game-card:hover .game-image img {
             transform: scale(1.08);
         }
-
         .game-name {
             margin: 14px 10px 6px;
             font-size: 1.25rem;
             font-weight: 600;
         }
-
         .high-score {
             font-size: 0.95rem;
             color: #00ffcc;
             margin-bottom: 12px;
             opacity: 0.9;
         }
-
         footer {
             text-align: center;
             padding: 1.5rem;
@@ -139,110 +123,74 @@
 
 <div class="games-container">
 
-    <!-- Game 1 -->
     <a href="ball.html" class="game-card">
-        <div class="game-image">
-            <img src="https://via.placeholder.com/240x160/1e3a5f/00ffff?text=Ball+Catch" alt="Ball Catch">
-        </div>
+        <div class="game-image"><img src="https://via.placeholder.com/240x160/1e3a5f/00ffff?text=Ball+Catch" alt="Ball Catch"></div>
         <div class="game-name">Ball Catch</div>
-        <div class="high-score">High Score: 120</div>
+        <div class="high-score">High Score: —</div>
     </a>
 
-    <!-- Game 2 -->
     <a href="chain.html" class="game-card">
-        <div class="game-image">
-            <img src="https://via.placeholder.com/240x160/243b55/00ffff?text=Chain+Reaction" alt="Chain Reaction">
-        </div>
+        <div class="game-image"><img src="https://via.placeholder.com/240x160/243b55/00ffff?text=Chain+Reaction" alt="Chain Reaction"></div>
         <div class="game-name">Chain Reaction</div>
-        <div class="high-score">High Score: 95</div>
+        <div class="high-score">High Score: —</div>
     </a>
 
-    <!-- Game 3 -->
     <a href="circle.html" class="game-card">
-        <div class="game-image">
-            <img src="https://via.placeholder.com/240x160/141e30/00ffff?text=Click+Circle" alt="Click the Circle">
-        </div>
+        <div class="game-image"><img src="https://via.placeholder.com/240x160/141e30/00ffff?text=Click+Circle" alt="Click the Circle"></div>
         <div class="game-name">Click the Circle</div>
-        <div class="high-score">High Score: 210</div>
+        <div class="high-score">High Score: —</div>
     </a>
 
-    <!-- Game 4 -->
-    <a href="dino.html" class="game-card">
-        <div class="game-image">
-            <img src="https://via.placeholder.com/240x160/1c2526/00ffff?text=Dino+Runner" alt="Dino Runner">
-        </div>
+    <a href="dino1.html" class="game-card">
+        <div class="game-image"><img src="https://via.placeholder.com/240x160/1c2526/00ffff?text=Dino+Runner" alt="Dino Runner"></div>
         <div class="game-name">Dino Runner</div>
-        <div class="high-score">High Score: 75</div>
+        <div class="high-score">High Score: —</div>
     </a>
 
-    <!-- Game 5 -->
     <a href="shadow.html" class="game-card">
-        <div class="game-image">
-            <img src="https://via.placeholder.com/240x160/2c3e50/00ffff?text=Shadow+Chaser" alt="Shadow Chaser">
-        </div>
+        <div class="game-image"><img src="https://via.placeholder.com/240x160/2c3e50/00ffff?text=Shadow+Chaser" alt="Shadow Chaser"></div>
         <div class="game-name">Shadow Chaser</div>
         <div class="high-score">High Score: —</div>
     </a>
 
-    <!-- Game 6 -->
     <a href="wall.html" class="game-card">
-        <div class="game-image">
-            <img src="https://via.placeholder.com/240x160/34495e/00ffff?text=Escape+Walls" alt="Escape the Walls">
-        </div>
+        <div class="game-image"><img src="https://via.placeholder.com/240x160/34495e/00ffff?text=Escape+Walls" alt="Escape the Walls"></div>
         <div class="game-name">Escape the Walls</div>
         <div class="high-score">High Score: —</div>
     </a>
 
-    <!-- Game 7 -->
     <a href="snake.html" class="game-card">
-        <div class="game-image">
-            <img src="https://via.placeholder.com/240x160/16a085/00ffff?text=Snake" alt="Snake Game">
-        </div>
+        <div class="game-image"><img src="https://via.placeholder.com/240x160/16a085/00ffff?text=Snake" alt="Snake Game"></div>
         <div class="game-name">Classic Snake</div>
         <div class="high-score">High Score: —</div>
     </a>
 
-    <!-- Game 8 -->
     <a href="maze.html" class="game-card">
-        <div class="game-image">
-            <img src="https://via.placeholder.com/240x160/27ae60/00ffff?text=Maze+Escape" alt="Maze Escape">
-        </div>
+        <div class="game-image"><img src="https://via.placeholder.com/240x160/27ae60/00ffff?text=Maze+Escape" alt="Maze Escape"></div>
         <div class="game-name">Maze Escape</div>
         <div class="high-score">Level —</div>
     </a>
 
-    <!-- Game 9 -->
     <a href="flash.html" class="game-card">
-        <div class="game-image">
-            <img src="https://via.placeholder.com/240x160/2980b9/00ffff?text=Memory+Flash" alt="Memory Flash">
-        </div>
+        <div class="game-image"><img src="https://via.placeholder.com/240x160/2980b9/00ffff?text=Memory+Flash" alt="Memory Flash"></div>
         <div class="game-name">Memory Flash</div>
         <div class="high-score">Level —</div>
     </a>
 
-    <!-- Game 10 -->
     <a href="reverse.html" class="game-card">
-        <div class="game-image">
-            <img src="https://via.placeholder.com/240x160/8e44ad/00ffff?text=Reverse+Controls" alt="Reverse Controls">
-        </div>
+        <div class="game-image"><img src="https://via.placeholder.com/240x160/8e44ad/00ffff?text=Reverse+Controls" alt="Reverse Controls"></div>
         <div class="game-name">Reverse Controls</div>
         <div class="high-score">High Score: —</div>
     </a>
 
-    <!-- Game 11 -->
     <a href="red.html" class="game-card">
-        <div class="game-image">
-            <img src="https://via.placeholder.com/240x160/c0392b/00ffff?text=Don't+Touch+Red" alt="Don't Touch Red">
-        </div>
+        <div class="game-image"><img src="https://via.placeholder.com/240x160/c0392b/00ffff?text=Don't+Touch+Red" alt="Don't Touch Red"></div>
         <div class="game-name">Don't Touch Red</div>
         <div class="high-score">Time —</div>
     </a>
 
-    <!-- Game 12 -->
     <a href="doit.html" class="game-card">
-        <div class="game-image">
-            <img src="https://via.placeholder.com/240x160/d35400/00ffff?text=Car+Dodge" alt="Car Dodge">
-        </div>
+        <div class="game-image"><img src="https://via.placeholder.com/240x160/d35400/00ffff?text=Car+Dodge" alt="Car Dodge"></div>
         <div class="game-name">Car Dodge</div>
         <div class="high-score">High Score: —</div>
     </a>
@@ -254,10 +202,11 @@
 </footer>
 
 <script>
-// Floating cyan particles (same as before)
+// ────────────────────────────────────────────────
+// Floating cyan particles
+// ────────────────────────────────────────────────
 const canvas = document.getElementById("bg");
 const ctx = canvas.getContext("2d");
-
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
@@ -279,7 +228,6 @@ function animate() {
         p.y += p.dy;
         if(p.x < 0 || p.x > canvas.width) p.dx *= -1;
         if(p.y < 0 || p.y > canvas.height) p.dy *= -1;
-
         ctx.shadowColor = "#00ffff";
         ctx.shadowBlur = 12;
         ctx.fillStyle = "rgba(0,255,255,0.65)";
@@ -295,6 +243,41 @@ window.addEventListener("resize", () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 });
+
+// ────────────────────────────────────────────────
+// High Score Display System
+// ────────────────────────────────────────────────
+const highScoreData = [
+    { selector: ".game-card[href='ball.html']   .high-score", key: "ball",   prefix: "High Score: ", suffix: ""  },
+    { selector: ".game-card[href='chain.html']  .high-score", key: "chain",  prefix: "High Score: ", suffix: ""  },
+    { selector: ".game-card[href='circle.html'] .high-score", key: "circle", prefix: "High Score: ", suffix: ""  },
+    { selector: ".game-card[href='dino.html']   .high-score", key: "dino",   prefix: "High Score: ", suffix: ""  },
+    { selector: ".game-card[href='shadow.html'] .high-score", key: "shadow", prefix: "High Score: ", suffix: ""  },
+    { selector: ".game-card[href='wall.html']   .high-score", key: "wall",   prefix: "High Score: ", suffix: ""  },
+    { selector: ".game-card[href='snake.html']  .high-score", key: "snake",  prefix: "High Score: ", suffix: ""  },
+    { selector: ".game-card[href='maze.html']   .high-score", key: "maze",   prefix: "Level ",       suffix: ""  },
+    { selector: ".game-card[href='flash.html']  .high-score", key: "flash",  prefix: "Level ",       suffix: ""  },
+    { selector: ".game-card[href='reverse.html'].high-score", key: "reverse",prefix: "High Score: ", suffix: ""  },
+    { selector: ".game-card[href='red.html']    .high-score", key: "red",    prefix: "Time ",        suffix: "s" },
+    { selector: ".game-card[href='doit.html']   .high-score", key: "doit",   prefix: "High Score: ", suffix: ""  }
+];
+
+function updateHighScores() {
+    highScoreData.forEach(item => {
+        const el = document.querySelector(item.selector);
+        if (!el) return;
+        
+        const value = localStorage.getItem(item.key + "_highscore");
+        const display = (value !== null && value !== "") ? value : "—";
+        el.textContent = item.prefix + display + item.suffix;
+    });
+}
+
+// Run once on load
+updateHighScores();
+
+// Listen for changes from other tabs/windows
+window.addEventListener('storage', updateHighScores);
 </script>
 
 </body>
