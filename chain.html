@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Chain Reaction</title>
+<style>
+body {text-align:center; font-family:sans-serif; background:#222; color:white;}
+canvas {background:#111; display:block; margin:auto; border:2px solid #555;}
+button {padding:8px 15px; margin-top:10px;}
+</style>
+</head>
+<body>
+
+<h2>Chain Reaction</h2>
+<canvas id="canvas" width="500" height="400"></canvas>
+<p>Score: <span id="score">0</span></p>
+<button onclick="location.reload()">Restart</button>
+
+<script>
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+const scoreDisplay=document.getElementById("score");
+
+let score=0;
+let clicked=false;
+let gameEnded=false;
+
+class Ball{
+    constructor(){
+        this.x=Math.random()*480+10;
+        this.y=Math.random()*380+10;
+        this.r=8;
+        this.vx=(Math.random()*2+1)*(Math.random()<0.5?1:-1);
+        this.vy=(Math.random()*2+1)*(Math.random()<0.5?1:-1);
+        this.exploding=false;
+        this.radius=8;
+        this.life=0;
+        this.dead=false;
+    }
+
+    update(){
+        if(this.dead) return;
+
+        if(this.exploding){
+            this.life++;
+            this.radius+=1.5;
+            ctx.fillStyle="orange";
+            ctx.beginPath();
+            ctx.arc(this.x,this.y,this.radius,0,Math.PI*2);
+            ctx.fill();
+
+            if(this.life>30){
+                this.dead=true;
+            }
+        } else {
+            this.x+=this.vx;
+            this.y+=this.vy;
+
+            if(this.x<0||this.x>500) this.vx*=-1;
+            if(this.y<0||this.y>400) this.vy*=-1;
+
+            ctx.fillStyle="cyan";
+            ctx.beginPath();
+            ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+            ctx.fill();
+        }
+    }
+}
+
+const balls=[];
+for(let i=0;i<25;i++) balls.push(new Ball());
+
+canvas.addEventListener("click", e=>{
+    if(clicked) return;   // only one click allowed
+    clicked=true;
+
+    const rect=canvas.getBoundingClientRect();
+    const mx=e.clientX-rect.left;
+    const my=e.clientY-rect.top;
+
+    balls.forEach(b=>{
+        if(Math.hypot(mx-b.x,my-b.y)<b.r){
+            b.exploding=true;
+            score++;
+        }
+    });
+
+    scoreDisplay.textContent=score;
+});
+
+function update(){
+    ctx.clearRect(0,0,500,400);
+
+    balls.forEach(b=>b.update());
+
+    // Chain reaction check
+    balls.forEach(a=>{
+        if(!a.exploding || a.dead) return;
+
+        balls.forEach(b=>{
+            if(a===b || b.exploding || b.dead) return;
+
+            let dist=Math.hypot(a.x-b.x,a.y-b.y);
+            if(dist < a.radius + b.r){
+                b.exploding=true;
+                score++;
+                scoreDisplay.textContent=score;
+            }
+        });
+    });
+
+    // End game when all explosions finish
+    if(clicked && balls.every(b=>!b.exploding || b.dead)){
+        if(!gameEnded){
+            gameEnded=true;
+            setTimeout(()=>{
+                alert("Game Over! Final Score: "+score);
+            },500);
+        }
+    }
+
+    requestAnimationFrame(update);
+}
+update();
+</script>
+
+</body>
+</html>

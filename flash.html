@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Memory Flash</title>
+<style>
+body{
+    text-align:center;
+    font-family:sans-serif;
+    background:#222;
+    color:white;
+}
+.grid{
+    display:grid;
+    grid-template-columns:repeat(2,100px);
+    gap:10px;
+    justify-content:center;
+    margin-top:20px;
+}
+.box{
+    width:100px;
+    height:100px;
+    background:#555;
+    cursor:pointer;
+}
+.active{
+    background:yellow;
+}
+</style>
+</head>
+<body>
+
+<h2>Memory Flash</h2>
+<p>Level: <span id="level">1</span></p>
+
+<div class="grid">
+    <div class="box" data-index="0"></div>
+    <div class="box" data-index="1"></div>
+    <div class="box" data-index="2"></div>
+    <div class="box" data-index="3"></div>
+</div>
+
+<script>
+let sequence = [];
+let playerIndex = 0;
+let level = 1;
+let canClick = false;
+
+const boxes = document.querySelectorAll(".box");
+const levelDisplay = document.getElementById("level");
+
+// Start first level
+startLevel();
+
+function startLevel(){
+    playerIndex = 0;
+    canClick = false;
+    levelDisplay.textContent = level;
+
+    sequence.push(Math.floor(Math.random()*4));
+    playSequence();
+}
+
+function playSequence(){
+    let i = 0;
+
+    const interval = setInterval(() => {
+        const box = boxes[sequence[i]];
+        box.classList.add("active");
+
+        setTimeout(() => {
+            box.classList.remove("active");
+        }, 400);
+
+        i++;
+
+        if(i >= sequence.length){
+            clearInterval(interval);
+            setTimeout(() => {
+                canClick = true;
+            }, 500);
+        }
+    }, 800);
+}
+
+boxes.forEach(box => {
+    box.addEventListener("click", () => {
+        if(!canClick) return;
+
+        const index = Number(box.dataset.index);
+
+        // Visual click effect
+        box.classList.add("active");
+        setTimeout(() => box.classList.remove("active"), 200);
+
+        if(index === sequence[playerIndex]){
+            playerIndex++;
+            if(playerIndex === sequence.length){
+                level++;
+                setTimeout(startLevel, 800);
+            }
+        } else {
+            alert("Game Over! You reached Level " + level);
+            location.reload();
+        }
+    });
+});
+</script>
+
+</body>
+</html>

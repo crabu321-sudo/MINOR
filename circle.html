@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Click the Circle Game</title>
+    <style>
+        body { text-align:center; font-family:sans-serif; background:#f0f0f0; }
+        canvas { background:#fff; display:block; margin:auto; border:2px solid #333; }
+        h2 { color:#333; }
+        #timer { font-size: 20px; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <h2>Click the Circle Game</h2>
+    <canvas id="clickCanvas" width="500" height="400"></canvas>
+    <p>Score: <span id="score">0</span></p>
+    <p>Time Left: <span id="timer">3.0</span> s</p>
+    <button onclick="location.reload()">Restart Game</button>
+
+    <script>
+    const canvas = document.getElementById("clickCanvas");
+    const ctx = canvas.getContext("2d");
+    const scoreDisplay = document.getElementById("score");
+    const timerDisplay = document.getElementById("timer");
+
+    let score = 0;
+    let circle = {x: 100, y: 100, radius: 30};
+    let maxTime = 3.0; // max allowed time
+    let minTime = 1.0; // minimum allowed time
+    let timeLeft = maxTime; 
+    let lastTime = Date.now();
+    let gameOver = false;
+
+    function drawCircle() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = "red";
+        ctx.beginPath();
+        ctx.arc(circle.x, circle.y, circle.radius, 0, Math.PI*2);
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    function randomCircle() {
+        circle.x = Math.random()*(canvas.width - circle.radius*2) + circle.radius;
+        circle.y = Math.random()*(canvas.height - circle.radius*2) + circle.radius;
+
+        // Set timer based on score (shrinking from 3s to 1s)
+        timeLeft = Math.max(maxTime - score*0.2, minTime); 
+        lastTime = Date.now();
+
+        drawCircle();
+    }
+
+    canvas.addEventListener("click", function(e){
+        if(gameOver) return;
+
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+
+        const distance = Math.hypot(mx - circle.x, my - circle.y);
+        if(distance <= circle.radius){
+            score++;
+            scoreDisplay.textContent = score;
+            randomCircle();
+        }
+    });
+
+    function update() {
+        if(gameOver) return;
+
+        // Countdown timer
+        const now = Date.now();
+        const delta = (now - lastTime) / 1000;
+        timeLeft -= delta;
+        lastTime = now;
+
+        timerDisplay.textContent = timeLeft.toFixed(1);
+
+        if(timeLeft <= 0){
+            gameOver = true;
+            alert("Game Over! Score: "+score);
+            return;
+        }
+
+        requestAnimationFrame(update);
+    }
+
+    randomCircle();
+    update();
+    </script>
+</body>
+</html>
