@@ -20,6 +20,7 @@ canvas{
 
 <h2>Maze Escape</h2>
 <p>Level: <span id="level">1</span></p>
+<p>Best Level Reached: <span id="highScore">1</span></p>
 <canvas id="game" width="400" height="400"></canvas>
 
 <script>
@@ -31,37 +32,32 @@ let walls = [];
 let level = 1;
 let maxLevel = 3;
 let gameOver = false;
+let highScore = parseInt(localStorage.getItem('mazeEscapeHighLevel')) || 1;
+document.getElementById("highScore").textContent = highScore;
 
-/* ===== FIXED LEVELS WITH CLEAR PATHS ===== */
-
+/* ===== FIXED LEVELS ===== */
 const levels = {
-
-1: [
-{x:100,y:0,w:20,h:250},
-{x:200,y:150,w:20,h:250},
-{x:300,y:0,w:20,h:250},
-{x:50,y:300,w:250,h:20}
-],
-
-2: [
-{x:50,y:50,w:300,h:20},
-{x:50,y:50,w:20,h:250},
-{x:330,y:120,w:20,h:230},
-{x:100,y:150,w:200,h:20},
-{x:50,y:300,w:250,h:20}
-],
-
-3: [
-{x:80,y:0,w:20,h:220},
-{x:160,y:180,w:20,h:220},
-{x:240,y:0,w:20,h:220},
-{x:320,y:180,w:20,h:220},
-{x:0,y:250,w:200,h:20}
-]
-
+    1: [
+        {x:100,y:0,w:20,h:250},
+        {x:200,y:150,w:20,h:250},
+        {x:300,y:0,w:20,h:250},
+        {x:50,y:300,w:250,h:20}
+    ],
+    2: [
+        {x:50,y:50,w:300,h:20},
+        {x:50,y:50,w:20,h:250},
+        {x:330,y:120,w:20,h:230},
+        {x:100,y:150,w:200,h:20},
+        {x:50,y:300,w:250,h:20}
+    ],
+    3: [
+        {x:80,y:0,w:20,h:220},
+        {x:160,y:180,w:20,h:220},
+        {x:240,y:0,w:20,h:220},
+        {x:320,y:180,w:20,h:220},
+        {x:0,y:250,w:200,h:20}
+    ]
 };
-
-/* ===== INIT ===== */
 
 function init(){
     player = {x:20, y:20, size:20, speed:5};
@@ -70,8 +66,6 @@ function init(){
     gameOver = false;
     document.getElementById("level").textContent = level;
 }
-
-/* ===== MOVEMENT ===== */
 
 document.addEventListener("keydown", e=>{
     if(gameOver) return;
@@ -84,11 +78,9 @@ document.addEventListener("keydown", e=>{
     if(e.key==="ArrowLeft") newX -= player.speed;
     if(e.key==="ArrowRight") newX += player.speed;
 
-    // Boundary check
     if(newX < 0 || newX > 400-player.size) return;
     if(newY < 0 || newY > 400-player.size) return;
 
-    // Wall collision
     let hitWall = walls.some(w =>
         newX < w.x + w.w &&
         newX + player.size > w.x &&
@@ -102,26 +94,20 @@ document.addEventListener("keydown", e=>{
     }
 });
 
-/* ===== GAME LOOP ===== */
-
 function update(){
     ctx.clearRect(0,0,400,400);
 
-    // Goal
     ctx.fillStyle="green";
     ctx.fillRect(goal.x, goal.y, goal.size, goal.size);
 
-    // Player
     ctx.fillStyle="cyan";
     ctx.fillRect(player.x, player.y, player.size, player.size);
 
-    // Walls
     ctx.fillStyle="red";
     walls.forEach(w=>{
         ctx.fillRect(w.x,w.y,w.w,w.h);
     });
 
-    // Win Check
     if(player.x < goal.x + goal.size &&
        player.x + player.size > goal.x &&
        player.y < goal.y + goal.size &&
@@ -130,11 +116,20 @@ function update(){
         gameOver = true;
 
         setTimeout(()=>{
+            if(level > highScore){
+                highScore = level;
+                localStorage.setItem('mazeEscapeHighLevel', highScore);
+                document.getElementById("highScore").textContent = highScore;
+                alert(`New Best! You reached level ${level}!`);
+            } else {
+                alert(`Level ${level} completed!\nBest: ${highScore}`);
+            }
+
             if(level < maxLevel){
                 level++;
                 init();
             } else {
-                alert("🏆 You completed all levels!");
+                alert("🏆 You completed ALL levels!\nBest level: " + highScore);
                 level = 1;
                 init();
             }
@@ -147,6 +142,5 @@ function update(){
 init();
 update();
 </script>
-
 </body>
 </html>
