@@ -81,13 +81,13 @@
             overflow: hidden;
         }
         .game-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
             transition: transform 0.45s ease;
         }
         .game-card:hover .game-image img {
-            transform: scale(1.12);
+            transform: scale(1.15);
         }
         .game-name {
             margin: 12px 8px 4px;
@@ -111,28 +111,15 @@
             border-top: 1px solid rgba(0, 212, 255, 0.2);
         }
 
-        /* Mobile / Tablet improvements */
+        /* Mobile improvements */
         @media (max-width: 768px) {
-            .games-container {
-                padding: 1.5rem 4vw;
-                gap: 1.2rem;
-            }
-            .game-image {
-                height: 130px;
-            }
-            header {
-                padding: 1.2rem 0.8rem;
-            }
+            .games-container { padding: 1.5rem 4vw; gap: 1.2rem; }
+            .game-image { height: 130px; }
+            header { padding: 1.2rem 0.8rem; }
         }
         @media (max-width: 480px) {
-            .games-container {
-                grid-template-columns: 1fr;
-                padding: 1rem 6vw;
-            }
-            .game-card {
-                margin: 0 auto;
-                max-width: 320px;
-            }
+            .games-container { grid-template-columns: 1fr; padding: 1rem 6vw; }
+            .game-card { margin: 0 auto; max-width: 320px; }
         }
     </style>
 </head>
@@ -146,7 +133,7 @@
 
     <a href="ball.html" class="game-card">
         <div class="game-image">
-            <img src="https://via.placeholder.com/240x140/00d4ff/ffffff?text=Ball" alt="Ball Catch">
+            <img src="https://game-icons.net/icons/ffffff/000000/ball-glow.png" alt="Ball Catch">
         </div>
         <div class="game-name">Ball Catch</div>
         <div class="high-score">High Score: —</div>
@@ -154,7 +141,7 @@
 
     <a href="chain.html" class="game-card">
         <div class="game-image">
-            <img src="https://via.placeholder.com/240x140/00b7eb/ffffff?text=Chain" alt="Chain Reaction">
+            <img src="https://game-icons.net/icons/ffffff/000000/chain-lightning.png" alt="Chain Reaction">
         </div>
         <div class="game-name">Chain Reaction</div>
         <div class="high-score">High Score: —</div>
@@ -162,7 +149,7 @@
 
     <a href="circle.html" class="game-card">
         <div class="game-image">
-            <img src="https://via.placeholder.com/240x140/4fc3f7/ffffff?text=Click" alt="Click the Circle">
+            <img src="https://game-icons.net/icons/ffffff/000000/center-target.png" alt="Click the Circle">
         </div>
         <div class="game-name">Click the Circle</div>
         <div class="high-score">High Score: —</div>
@@ -170,7 +157,7 @@
 
     <a href="dino1.html" class="game-card">
         <div class="game-image">
-            <img src="https://via.placeholder.com/240x140/29b6f6/ffffff?text=Dino" alt="Dino Runner">
+            <img src="https://game-icons.net/icons/ffffff/000000/dinosaur-rex.png" alt="Dino Runner">
         </div>
         <div class="game-name">Dino Runner</div>
         <div class="high-score">High Score: —</div>
@@ -178,7 +165,7 @@
 
     <a href="shadow.html" class="game-card">
         <div class="game-image">
-            <img src="https://via.placeholder.com/240x140/81d4fa/ffffff?text=Shadow" alt="Shadow Chaser">
+            <img src="https://game-icons.net/icons/ffffff/000000/ghost.png" alt="Shadow Chaser">
         </div>
         <div class="game-name">Shadow Chaser</div>
         <div class="high-score">High Score: —</div>
@@ -186,7 +173,7 @@
 
     <a href="wall.html" class="game-card">
         <div class="game-image">
-            <img src="https://via.placeholder.com/240x140/4dd0e1/ffffff?text=Wall" alt="Escape the Walls">
+            <img src="https://game-icons.net/icons/ffffff/000000/wall.png" alt="Escape the Walls">
         </div>
         <div class="game-name">Escape the Walls</div>
         <div class="high-score">High Score: —</div>
@@ -194,7 +181,7 @@
 
     <a href="snake.html" class="game-card">
         <div class="game-image">
-            <img src="https://via.placeholder.com/240x140/26c6da/ffffff?text=Snake" alt="Classic Snake">
+            <img src="https://game-icons.net/icons/ffffff/000000/snake.png" alt="Classic Snake">
         </div>
         <div class="game-name">Classic Snake</div>
         <div class="high-score">High Score: —</div>
@@ -202,7 +189,7 @@
 
     <a href="maze.html" class="game-card">
         <div class="game-image">
-            <img src="https://via.placeholder.com/240x140/00acc1/ffffff?text=Maze" alt="Maze Escape">
+            <img src="https://game-icons.net/icons/ffffff/000000/maze.png" alt="Maze Escape">
         </div>
         <div class="game-name">Maze Escape</div>
         <div class="high-score">Level —</div>
@@ -210,7 +197,7 @@
 
     <a href="flash.html" class="game-card">
         <div class="game-image">
-            <img src="https://via.placeholder.com/240x140/0097a7/ffffff?text=Memory" alt="Memory Flash">
+            <img src="https://game-icons.net/icons/ffffff/000000/memory.png" alt="Memory Flash">
         </div>
         <div class="game-name">Memory Flash</div>
         <div class="high-score">Level —</div>
@@ -218,7 +205,7 @@
 
     <a href="reverse.html" class="game-card">
         <div class="game-image">
-            <img src="https://via.placeholder.com/240x140/00838f/ffffff?text=Reverse" alt="Reverse Controls">
+            <img src="https://game-icons.net/icons/ffffff/000000/reverse.png" alt="Reverse Controls">
         </div>
         <div class="game-name">Reverse Controls</div>
         <div class="high-score">High Score: —</div>
@@ -226,7 +213,7 @@
 
     <a href="red.html" class="game-card">
         <div class="game-image">
-            <img src="https://via.placeholder.com/240x140/006064/ffffff?text=Red" alt="Don't Touch Red">
+            <img src="https://game-icons.net/icons/ffffff/000000/prohibited.png" alt="Don't Touch Red">
         </div>
         <div class="game-name">Don't Touch Red</div>
         <div class="high-score">Time —</div>
@@ -234,7 +221,7 @@
 
     <a href="doit.html" class="game-card">
         <div class="game-image">
-            <img src="https://via.placeholder.com/240x140/004d40/ffffff?text=Car" alt="Car Dodge">
+            <img src="https://game-icons.net/icons/ffffff/000000/race-car.png" alt="Car Dodge">
         </div>
         <div class="game-name">Car Dodge</div>
         <div class="high-score">High Score: —</div>
@@ -247,14 +234,14 @@
 </footer>
 
 <script>
-// Floating subtle particles (lighter for light theme)
+// Floating subtle particles
 const canvas = document.getElementById("bg");
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 let particles = [];
-for(let i = 0; i < 80; i++){  // fewer particles for light theme
+for(let i = 0; i < 80; i++){
     particles.push({
         x: Math.random()*canvas.width,
         y: Math.random()*canvas.height,
@@ -287,7 +274,7 @@ window.addEventListener("resize", () => {
     canvas.height = window.innerHeight;
 });
 
-// High Score Display System (unchanged)
+// High Score Display System
 const highScoreData = [
     { selector: ".game-card[href='ball.html']   .high-score", key: "ball",   prefix: "High Score: ", suffix: ""  },
     { selector: ".game-card[href='chain.html']  .high-score", key: "chain",  prefix: "High Score: ", suffix: ""  },
