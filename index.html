@@ -6,25 +6,23 @@
     <title>My Gaming Platform</title>
     <style>
         :root {
-            --cyan: #00d4ff;
-            --light-bg: #f0f8ff;
-            --card-bg: rgba(255, 255, 255, 0.75);
-            --text-dark: #1a2a44;
-            --accent: #00b7eb;
+            --cyan: #00ffff;
+            --dark: #0f2027;
+            --mid: #203a43;
         }
         body {
             margin: 0;
-            font-family: system-ui, -apple-system, sans-serif;
-            color: var(--text-dark);
-            background: linear-gradient(-45deg, #e0f7fa, #bbdefb, #e3f2fd, #f0f8ff);
-            background-size: 300% 300%;
-            animation: gradientShift 18s ease infinite;
+            font-family: Arial, sans-serif;
+            color: white;
+            background: linear-gradient(-45deg, var(--dark), var(--mid), #2c5364, #1c1c1c);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             min-height: 100vh;
             overflow-x: hidden;
         }
-        @keyframes gradientShift {
-            0%   { background-position: 0% 50%; }
-            50%  { background-position: 100% 50%; }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
         canvas#bg {
@@ -34,220 +32,217 @@
             pointer-events: none;
         }
         header {
-            background: rgba(255,255,255,0.8);
-            backdrop-filter: blur(10px);
-            padding: 1.4rem 1rem;
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(6px);
+            padding: 1.8rem;
             text-align: center;
-            font-size: clamp(1.6rem, 5vw, 2.2rem);
-            font-weight: 700;
-            color: var(--accent);
-            border-bottom: 1px solid rgba(0, 212, 255, 0.3);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            font-size: 2.1rem;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(0,255,255,0.18);
+            animation: fadeIn 1.4s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .games-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-            padding: 2rem 5vw;
-            max-width: 1600px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 28px;
+            padding: 40px 5vw;
+            max-width: 1400px;
             margin: 0 auto;
         }
         .game-card {
-            background: var(--card-bg);
+            background: rgba(0,0,0,0.58);
             border-radius: 16px;
             overflow: hidden;
-            transition: all 0.32s ease;
+            transition: all 0.35s ease;
             cursor: pointer;
             text-align: center;
-            border: 1px solid rgba(0, 212, 255, 0.25);
-            backdrop-filter: blur(8px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,255,255,0.22);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
         .game-card:hover {
-            transform: translateY(-10px) scale(1.05);
-            box-shadow: 0 14px 40px rgba(0, 183, 235, 0.25);
+            transform: translateY(-12px) scale(1.06);
+            box-shadow: 0 12px 35px rgba(0, 255, 255, 0.28);
             border-color: var(--cyan);
         }
         .game-card:active {
-            transform: translateY(-3px) scale(0.98);
+            transform: translateY(-4px) scale(0.98);
+            transition: all 0.12s ease;
         }
         .game-image {
-            height: 140px;
-            background: linear-gradient(135deg, #e0f7fa, #b3e5fc);
+            height: 160px;
+            background: linear-gradient(135deg, #141e30, #1e3a5f);
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: rgba(255,255,255,0.7);
             position: relative;
             overflow: hidden;
         }
         .game-image img {
-            width: 80%;
-            height: 80%;
-            object-fit: contain;
-            transition: transform 0.45s ease;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
         }
         .game-card:hover .game-image img {
-            transform: scale(1.15);
+            transform: scale(1.08);
         }
         .game-name {
-            margin: 12px 8px 4px;
-            font-size: clamp(1.1rem, 3.5vw, 1.3rem);
+            margin: 14px 10px 6px;
+            font-size: 1.25rem;
             font-weight: 600;
-            color: #0d47a1;
         }
         .high-score {
-            font-size: 0.9rem;
-            color: #00838f;
-            margin-bottom: 10px;
-            font-weight: 500;
+            font-size: 0.95rem;
+            color: #00ffcc;
+            margin-bottom: 12px;
+            opacity: 0.9;
         }
         footer {
             text-align: center;
-            padding: 1.2rem;
-            background: rgba(255,255,255,0.7);
-            margin-top: 2rem;
-            font-size: 0.9rem;
-            color: #455a64;
-            border-top: 1px solid rgba(0, 212, 255, 0.2);
-        }
-
-        /* Mobile improvements */
-        @media (max-width: 768px) {
-            .games-container { padding: 1.5rem 4vw; gap: 1.2rem; }
-            .game-image { height: 130px; }
-            header { padding: 1.2rem 0.8rem; }
-        }
-        @media (max-width: 480px) {
-            .games-container { grid-template-columns: 1fr; padding: 1rem 6vw; }
-            .game-card { margin: 0 auto; max-width: 320px; }
+            padding: 1.5rem;
+            background: rgba(0,0,0,0.6);
+            margin-top: 40px;
+            font-size: 0.95rem;
+            border-top: 1px solid rgba(0,255,255,0.15);
         }
     </style>
 </head>
 <body>
 
-<canvas id="bg"></canvas>
+<canvas id="bg" aria-hidden="true"></canvas>
 
 <header>🎮 My Gaming Platform</header>
 
 <div class="games-container">
 
-    <a href="ball.html" class="game-card">
-        <div class="game-image">
-            <img src="https://game-icons.net/icons/ffffff/000000/ball-glow.png" alt="Ball Catch">
-        </div>
-        <div class="game-name">Ball Catch</div>
-        <div class="high-score">High Score: —</div>
-    </a>
-
-    <a href="chain.html" class="game-card">
-        <div class="game-image">
-            <img src="https://game-icons.net/icons/ffffff/000000/chain-lightning.png" alt="Chain Reaction">
-        </div>
-        <div class="game-name">Chain Reaction</div>
-        <div class="high-score">High Score: —</div>
-    </a>
-
-    <a href="circle.html" class="game-card">
-        <div class="game-image">
-            <img src="https://game-icons.net/icons/ffffff/000000/center-target.png" alt="Click the Circle">
-        </div>
-        <div class="game-name">Click the Circle</div>
-        <div class="high-score">High Score: —</div>
-    </a>
-
-    <a href="dino1.html" class="game-card">
-        <div class="game-image">
-            <img src="https://game-icons.net/icons/ffffff/000000/dinosaur-rex.png" alt="Dino Runner">
-        </div>
-        <div class="game-name">Dino Runner</div>
-        <div class="high-score">High Score: —</div>
-    </a>
-
-    <a href="shadow.html" class="game-card">
-        <div class="game-image">
-            <img src="https://game-icons.net/icons/ffffff/000000/ghost.png" alt="Shadow Chaser">
-        </div>
-        <div class="game-name">Shadow Chaser</div>
-        <div class="high-score">High Score: —</div>
-    </a>
-
-    <a href="wall.html" class="game-card">
-        <div class="game-image">
-            <img src="https://game-icons.net/icons/ffffff/000000/wall.png" alt="Escape the Walls">
-        </div>
-        <div class="game-name">Escape the Walls</div>
-        <div class="high-score">High Score: —</div>
-    </a>
-
+    <!-- 1. Classic Snake -->
     <a href="snake.html" class="game-card">
         <div class="game-image">
-            <img src="https://game-icons.net/icons/ffffff/000000/snake.png" alt="Classic Snake">
+            <img loading="lazy" src="https://files.catbox.moe/abcdef-snake.jpg" alt="Classic Snake">
         </div>
         <div class="game-name">Classic Snake</div>
         <div class="high-score">High Score: —</div>
     </a>
 
-    <a href="maze.html" class="game-card">
+    <!-- 2. Dino Runner -->
+    <a href="dino1.html" class="game-card">
         <div class="game-image">
-            <img src="https://game-icons.net/icons/ffffff/000000/maze.png" alt="Maze Escape">
+            <img loading="lazy" src="https://files.catbox.moe/abcdef-dino.jpg" alt="Dino Runner">
         </div>
-        <div class="game-name">Maze Escape</div>
-        <div class="high-score">Level —</div>
-    </a>
-
-    <a href="flash.html" class="game-card">
-        <div class="game-image">
-            <img src="https://game-icons.net/icons/ffffff/000000/memory.png" alt="Memory Flash">
-        </div>
-        <div class="game-name">Memory Flash</div>
-        <div class="high-score">Level —</div>
-    </a>
-
-    <a href="reverse.html" class="game-card">
-        <div class="game-image">
-            <img src="https://game-icons.net/icons/ffffff/000000/reverse.png" alt="Reverse Controls">
-        </div>
-        <div class="game-name">Reverse Controls</div>
+        <div class="game-name">Dino Runner</div>
         <div class="high-score">High Score: —</div>
     </a>
 
+    <!-- 3. Don't Touch Red -->
     <a href="red.html" class="game-card">
         <div class="game-image">
-            <img src="https://game-icons.net/icons/ffffff/000000/prohibited.png" alt="Don't Touch Red">
+            <img loading="lazy" src="https://files.catbox.moe/abcdef-touch.jpg" alt="Don't Touch Red">
         </div>
         <div class="game-name">Don't Touch Red</div>
         <div class="high-score">Time —</div>
     </a>
 
+    <!-- 4. Click the Circle -->
+    <a href="circle1.html" class="game-card">
+        <div class="game-image">
+            <img loading="lazy" src="https://files.catbox.moe/abcdef-touch.jpg" alt="Click the Circle">
+        </div>
+        <div class="game-name">Click the Circle</div>
+        <div class="high-score">High Score: —</div>
+    </a>
+
+    <!-- 5. Chain Reaction -->
+    <a href="chain.html" class="game-card">
+        <div class="game-image">
+            <img loading="lazy" src="https://files.catbox.moe/abcdef-chain.jpg" alt="Chain Reaction">
+        </div>
+        <div class="game-name">Chain Reaction</div>
+        <div class="high-score">High Score: —</div>
+    </a>
+
+    <!-- 6. Shadow Chaser -->
+    <a href="shadow.html" class="game-card">
+        <div class="game-image">
+            <img loading="lazy" src="https://files.catbox.moe/abcdef-shadow.jpg" alt="Shadow Chaser">
+        </div>
+        <div class="game-name">Shadow Chaser</div>
+        <div class="high-score">High Score: —</div>
+    </a>
+
+    <!-- 7. Escape the Walls -->
+    <a href="wall.html" class="game-card">
+        <div class="game-image">
+            <img loading="lazy" src="https://files.catbox.moe/abcdef-tunnel.jpg" alt="Escape the Walls">
+        </div>
+        <div class="game-name">Escape the Walls</div>
+        <div class="high-score">High Score: —</div>
+    </a>
+
+    <!-- 8. Car Dodge -->
     <a href="doit.html" class="game-card">
         <div class="game-image">
-            <img src="https://game-icons.net/icons/ffffff/000000/race-car.png" alt="Car Dodge">
+            <img loading="lazy" src="https://files.catbox.moe/abcdef-cube.jpg" alt="Car Dodge">
         </div>
         <div class="game-name">Car Dodge</div>
         <div class="high-score">High Score: —</div>
     </a>
 
+    <!-- 9. Reverse Controls -->
+    <a href="reverse.html" class="game-card">
+        <div class="game-image">
+            <img loading="lazy" src="https://files.catbox.moe/abcdef-touch.jpg" alt="Reverse Controls">
+        </div>
+        <div class="game-name">Reverse Controls</div>
+        <div class="high-score">High Score: —</div>
+    </a>
+
+    <!-- 10. Maze Escape -->
+    <a href="maze.html" class="game-card">
+        <div class="game-image">
+            <img loading="lazy" src="https://files.catbox.moe/abcdef-maze.jpg" alt="Maze Escape">
+        </div>
+        <div class="game-name">Maze Escape</div>
+        <div class="high-score">Level —</div>
+    </a>
+
+    <!-- 11. Memory Flash -->
+    <a href="flash.html" class="game-card">
+        <div class="game-image">
+            <img loading="lazy" src="https://files.catbox.moe/abcdef-grid.jpg" alt="Memory Flash">
+        </div>
+        <div class="game-name">Memory Flash</div>
+        <div class="high-score">Level —</div>
+    </a>
+
 </div>
 
 <footer>
-    Minor Project - Abhay S R, S4 Computer Engineering, MTI Thrissur
+    © Minor Project - Abhay S R, S4 Computer Engineering, MTI Thrissur
 </footer>
 
 <script>
-// Floating subtle particles
+// Floating cyan particles
 const canvas = document.getElementById("bg");
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 let particles = [];
-for(let i = 0; i < 80; i++){
+for(let i = 0; i < 140; i++){
     particles.push({
         x: Math.random()*canvas.width,
         y: Math.random()*canvas.height,
-        r: Math.random()*1.8 + 0.6,
-        dx: Math.random()*0.8 - 0.4,
-        dy: Math.random()*0.8 - 0.4
+        r: Math.random()*2.2 + 0.8,
+        dx: Math.random()*1.2 - 0.6,
+        dy: Math.random()*1.2 - 0.6
     });
 }
 
@@ -258,9 +253,9 @@ function animate() {
         p.y += p.dy;
         if(p.x < 0 || p.x > canvas.width) p.dx *= -1;
         if(p.y < 0 || p.y > canvas.height) p.dy *= -1;
-        ctx.shadowColor = "rgba(0, 212, 255, 0.5)";
-        ctx.shadowBlur = 8;
-        ctx.fillStyle = "rgba(0, 212, 255, 0.35)";
+        ctx.shadowColor = "#00ffff";
+        ctx.shadowBlur = 12;
+        ctx.fillStyle = "rgba(0,255,255,0.65)";
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
         ctx.fill();
@@ -274,29 +269,36 @@ window.addEventListener("resize", () => {
     canvas.height = window.innerHeight;
 });
 
-// High Score Display System
-const highScoreData = [
-    { selector: ".game-card[href='ball.html']   .high-score", key: "ball",   prefix: "High Score: ", suffix: ""  },
-    { selector: ".game-card[href='chain.html']  .high-score", key: "chain",  prefix: "High Score: ", suffix: ""  },
-    { selector: ".game-card[href='circle.html'] .high-score", key: "circle", prefix: "High Score: ", suffix: ""  },
-    { selector: ".game-card[href='dino1.html']  .high-score", key: "dino",   prefix: "High Score: ", suffix: ""  },
-    { selector: ".game-card[href='shadow.html'] .high-score", key: "shadow", prefix: "High Score: ", suffix: ""  },
-    { selector: ".game-card[href='wall.html']   .high-score", key: "wall",   prefix: "High Score: ", suffix: ""  },
-    { selector: ".game-card[href='snake.html']  .high-score", key: "snake",  prefix: "High Score: ", suffix: ""  },
-    { selector: ".game-card[href='maze.html']   .high-score", key: "maze",   prefix: "Level ",       suffix: ""  },
-    { selector: ".game-card[href='flash.html']  .high-score", key: "flash",  prefix: "Level ",       suffix: ""  },
-    { selector: ".game-card[href='reverse.html'].high-score", key: "reverse",prefix: "High Score: ", suffix: ""  },
-    { selector: ".game-card[href='red.html']    .high-score", key: "red",    prefix: "Time ",        suffix: "s" },
-    { selector: ".game-card[href='doit.html']   .high-score", key: "doit",   prefix: "High Score: ", suffix: ""  }
+// High Score Display
+const games = [
+    { href: "snake.html",   key: "snake_highscore",   prefix: "High Score: ", suffix: ""   },
+    { href: "dino1.html",   key: "dino_highscore",    prefix: "High Score: ", suffix: ""   },
+    { href: "red.html",     key: "red_highscore",     prefix: "Time ",        suffix: "s"  },
+    { href: "circle1.html", key: "circle_highscore",  prefix: "High Score: ", suffix: ""   },
+    { href: "chain.html",   key: "chain_highscore",   prefix: "High Score: ", suffix: ""   },
+    { href: "shadow.html",  key: "shadow_highscore",  prefix: "High Score: ", suffix: ""   },
+    { href: "wall.html",    key: "wall_highscore",    prefix: "High Score: ", suffix: ""   },
+    { href: "doit.html",    key: "doit_highscore",    prefix: "High Score: ", suffix: ""   },
+    { href: "reverse.html", key: "reverse_highscore", prefix: "High Score: ", suffix: ""   },
+    { href: "maze.html",    key: "maze_highscore",    prefix: "Level ",       suffix: ""   },
+    { href: "flash.html",   key: "flash_highscore",   prefix: "Level ",       suffix: ""   }
 ];
 
 function updateHighScores() {
-    highScoreData.forEach(item => {
-        const el = document.querySelector(item.selector);
-        if (!el) return;
-        const value = localStorage.getItem(item.key + "_highscore");
-        const display = (value !== null && value !== "") ? value : "—";
-        el.textContent = item.prefix + display + item.suffix;
+    games.forEach(game => {
+        const card = document.querySelector(`.game-card[href="${game.href}"]`);
+        if (!card) return;
+        
+        const scoreEl = card.querySelector(".high-score");
+        if (!scoreEl) return;
+
+        const saved = localStorage.getItem(game.key);
+        let display = "—";
+        if (saved !== null && saved !== "" && saved !== "NaN") {
+            display = saved;
+        }
+        
+        scoreEl.textContent = game.prefix + display + game.suffix;
     });
 }
 
