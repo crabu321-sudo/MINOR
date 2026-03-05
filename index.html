@@ -305,6 +305,77 @@ function updateHighScores() {
 updateHighScores();
 window.addEventListener('storage', updateHighScores);
 </script>
+<script type="module">
+  // ───────────────────────────────────────────────
+  // Firebase imports
+  import { initializeApp } from "firebase/app";
+  import { getDatabase, ref, onValue } from "firebase/database";
 
+  // Your Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyBXOT2qzwZBU6wZcOehquWl-8J5X5qeO-w",
+    authDomain: "mygamingplatform-ef2e5.firebaseapp.com",
+    databaseURL: "https://mygamingplatform-ef2e5-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "mygamingplatform-ef2e5",
+    storageBucket: "mygamingplatform-ef2e5.firebasestorage.app",
+    messagingSenderId: "624947552097",
+    appId: "1:624947552097:web:b1886ea30f0de84eb12f20",
+    measurementId: "G-3ZXY51JHDP"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  // ───────────────────────────────────────────────
+  // Function to load and show leaderboard for one game
+
+  function loadLeaderboard(gameKey, listElementId, isTimeGame = false) {
+    const scoresRef = ref(db, `highscores/${gameKey}`);
+
+    onValue(scoresRef, (snapshot) => {
+      const scores = [];
+      snapshot.forEach(child => {
+        scores.push(child.val());
+      });
+
+      // Sort: highest score first (or lowest time first)
+      scores.sort((a, b) => isTimeGame ? a.score - b.score : b.score - a.score);
+
+      const list = document.getElementById(listElementId);
+      if (!list) return;
+
+      list.innerHTML = "";
+
+      // Show top 5
+      scores.slice(0, 5).forEach(entry => {
+        const li = document.createElement("li");
+        li.textContent = `${entry.name}: ${entry.score}${isTimeGame ? ' s' : ''}`;
+        list.appendChild(li);
+      });
+
+      if (scores.length === 0) {
+        list.innerHTML = '<li>No scores yet</li>';
+      }
+    });
+  }
+
+  // ───────────────────────────────────────────────
+  // Load leaderboards for all games
+  // Add more lines if you have more games
+
+  loadLeaderboard("snake",   "snake-leaderboard",   false);
+  loadLeaderboard("dino",    "dino-leaderboard",    false);
+  loadLeaderboard("red",     "red-leaderboard",     true);   // time game example
+  loadLeaderboard("circle",  "circle-leaderboard",  false);
+  loadLeaderboard("chain",   "chain-leaderboard",   false);
+  loadLeaderboard("shadow",  "shadow-leaderboard",  false);
+  loadLeaderboard("wall",    "wall-leaderboard",    false);
+  loadLeaderboard("doit",    "doit-leaderboard",    false);
+  loadLeaderboard("reverse", "reverse-leaderboard", false);
+  loadLeaderboard("maze",    "maze-leaderboard",    false);
+  loadLeaderboard("flash",   "flash-leaderboard",   false);
+
+</script>
 </body>
 </html>
+
