@@ -16,19 +16,7 @@
     <button onclick="location.reload()">Back to Home</button>
 
     <script>
-    // High score system
-    const GAME_KEY = 'dino';
-    function getHighScore() {
-        return Number(localStorage.getItem(GAME_KEY + '_highscore') || 0);
-    }
-    function saveHighScore(score) {
-        localStorage.setItem(GAME_KEY + '_highscore', score);
-    }
-
-    const canvas = document.getElementById("gameCanvas");
-    const ctx = canvas.getContext("2d");
-    const scoreDisplay = document.getElementById("score");
-
+    
     // Dino setup
     let dino = { x:50, y:250, width:40, height:40, dy:0, gravity:0.6, jumpPower:-12 };
 
@@ -195,4 +183,5 @@
 </script>
 </body>
 </html>
+
 
