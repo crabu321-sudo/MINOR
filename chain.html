@@ -183,8 +183,15 @@ update();
   // if (currentScore > bestScore) {
   //   saveHighScore(currentScore);
   // }
+function saveHighScore(score){
 
+const dbRef = ref(db, "games/game1/highscore");
+
+set(dbRef, score);
+
+}
 </script>
 </body>
 
 </html>
+
