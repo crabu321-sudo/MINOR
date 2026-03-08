@@ -346,115 +346,28 @@ window.addEventListener("resize", () => {
     canvas.height = window.innerHeight;
 });
 
-// High Score Display
-const games = [
-    { href: "snake.html",   key: "snake_highscore",   prefix: "High Score: ", suffix: ""   },
-    { href: "dino1.html",   key: "dino_highscore",    prefix: "High Score: ", suffix: ""   },
-    { href: "red.html",     key: "red_highscore",     prefix: "Time ",        suffix: "s"  },
-    { href: "circle1.html", key: "circle_highscore",  prefix: "High Score: ", suffix: ""   },
-    { href: "chain.html",   key: "chain_highscore",   prefix: "High Score: ", suffix: ""   },
-    { href: "shadow.html",  key: "shadow_highscore",  prefix: "High Score: ", suffix: ""   },
-    { href: "wall.html",    key: "wall_highscore",    prefix: "High Score: ", suffix: ""   },
-    { href: "doit.html",    key: "doit_highscore",    prefix: "High Score: ", suffix: ""   },
-    { href: "reverse.html", key: "reverse_highscore", prefix: "High Score: ", suffix: ""   },
-    { href: "maze.html",    key: "maze_highscore",    prefix: "Level ",       suffix: ""   },
-    { href: "flash.html",   key: "flash_highscore",   prefix: "Level ",       suffix: ""   }
-];
-
-function updateHighScores() {
-    games.forEach(game => {
-        const card = document.querySelector(`.game-card[href="${game.href}"]`);
-        if (!card) return;
-        
-        const scoreEl = card.querySelector(".high-score");
-        if (!scoreEl) return;
-
-        const saved = localStorage.getItem(game.key);
-        let display = "—";
-        if (saved !== null && saved !== "" && saved !== "NaN") {
-            display = saved;
-        }
-        
-        scoreEl.textContent = game.prefix + display + game.suffix;
-    });
-}
-
-updateHighScores();
-window.addEventListener('storage', updateHighScores);
-</script>
 <script type="module">
-  // ───────────────────────────────────────────────
-  // Firebase imports
-  import { initializeApp } from "firebase/app";
-  import { getDatabase, ref, onValue } from "firebase/database";
 
-  // Your Firebase config
-  const firebaseConfig = {
-    apiKey: "AIzaSyBXOT2qzwZBU6wZcOehquWl-8J5X5qeO-w",
-    authDomain: "mygamingplatform-ef2e5.firebaseapp.com",
-    databaseURL: "https://mygamingplatform-ef2e5-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "mygamingplatform-ef2e5",
-    storageBucket: "mygamingplatform-ef2e5.firebasestorage.app",
-    messagingSenderId: "624947552097",
-    appId: "1:624947552097:web:b1886ea30f0de84eb12f20",
-    measurementId: "G-3ZXY51JHDP"
-  };
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "mygamingplatform-ef2e5.firebaseapp.com",
+  databaseURL: "https://mygamingplatform-ef2e5-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "mygamingplatform-ef2e5",
+  storageBucket: "mygamingplatform-ef2e5.appspot.com",
+  messagingSenderId: "624947552097",
+  appId: "YOUR_APP_ID"
+};
 
-  // ───────────────────────────────────────────────
-  // Function to load and show leaderboard for one game
-
-  function loadLeaderboard(gameKey, listElementId, isTimeGame = false) {
-    const scoresRef = ref(db, `highscores/${gameKey}`);
-
-    onValue(scoresRef, (snapshot) => {
-      const scores = [];
-      snapshot.forEach(child => {
-        scores.push(child.val());
-      });
-
-      // Sort: highest score first (or lowest time first)
-      scores.sort((a, b) => isTimeGame ? a.score - b.score : b.score - a.score);
-
-      const list = document.getElementById(listElementId);
-      if (!list) return;
-
-      list.innerHTML = "";
-
-      // Show top 5
-      scores.slice(0, 5).forEach(entry => {
-        const li = document.createElement("li");
-        li.textContent = `${entry.name}: ${entry.score}${isTimeGame ? ' s' : ''}`;
-        list.appendChild(li);
-      });
-
-      if (scores.length === 0) {
-        list.innerHTML = '<li>No scores yet</li>';
-      }
-    });
-  }
-
-  // ───────────────────────────────────────────────
-  // Load leaderboards for all games
-  // Add more lines if you have more games
-
-  loadLeaderboard("snake",   "snake-leaderboard",   false);
-  loadLeaderboard("dino",    "dino-leaderboard",    false);
-  loadLeaderboard("red",     "red-leaderboard",     true);   // time game example
-  loadLeaderboard("circle",  "circle-leaderboard",  false);
-  loadLeaderboard("chain",   "chain-leaderboard",   false);
-  loadLeaderboard("shadow",  "shadow-leaderboard",  false);
-  loadLeaderboard("wall",    "wall-leaderboard",    false);
-  loadLeaderboard("doit",    "doit-leaderboard",    false);
-  loadLeaderboard("reverse", "reverse-leaderboard", false);
-  loadLeaderboard("maze",    "maze-leaderboard",    false);
-  loadLeaderboard("flash",   "flash-leaderboard",   false);
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
 </script>
 </body>
 </html>
+
 
 
 
