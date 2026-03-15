@@ -9,20 +9,29 @@ button {padding:8px 15px; margin-top:10px;}
 </style>
 </head>
 <body>
-
 <h2>Chain Reaction</h2>
 <canvas id="canvas" width="500" height="400"></canvas>
 <p>Score: <span id="score">0</span></p>
 <button onclick="location.reload()">Restart</button>
-
 <script>
 const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");
 const scoreDisplay=document.getElementById("score");
-
 let score=0;
 let clicked=false;
 let gameEnded=false;
+
+// ✅ Save score to Railway MySQL
+function saveScore(finalScore) {
+    fetch('save_score.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `game=chain&score=${finalScore}`
+    })
+    .then(r => r.json())
+    .then(data => console.log('Score saved:', data))
+    .catch(err => console.error('Error saving score:', err));
+}
 
 class Ball{
     constructor(){
@@ -36,10 +45,8 @@ class Ball{
         this.life=0;
         this.dead=false;
     }
-
     update(){
         if(this.dead) return;
-
         if(this.exploding){
             this.life++;
             this.radius+=1.5;
@@ -47,17 +54,14 @@ class Ball{
             ctx.beginPath();
             ctx.arc(this.x,this.y,this.radius,0,Math.PI*2);
             ctx.fill();
-
             if(this.life>30){
                 this.dead=true;
             }
         } else {
             this.x+=this.vx;
             this.y+=this.vy;
-
             if(this.x<0||this.x>500) this.vx*=-1;
             if(this.y<0||this.y>400) this.vy*=-1;
-
             ctx.fillStyle="cyan";
             ctx.beginPath();
             ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
@@ -70,35 +74,27 @@ const balls=[];
 for(let i=0;i<25;i++) balls.push(new Ball());
 
 canvas.addEventListener("click", e=>{
-    if(clicked) return;   // only one click allowed
+    if(clicked) return;
     clicked=true;
-
     const rect=canvas.getBoundingClientRect();
     const mx=e.clientX-rect.left;
     const my=e.clientY-rect.top;
-
     balls.forEach(b=>{
         if(Math.hypot(mx-b.x,my-b.y)<b.r){
             b.exploding=true;
             score++;
         }
     });
-
     scoreDisplay.textContent=score;
 });
 
 function update(){
     ctx.clearRect(0,0,500,400);
-
     balls.forEach(b=>b.update());
-
-    // Chain reaction check
     balls.forEach(a=>{
         if(!a.exploding || a.dead) return;
-
         balls.forEach(b=>{
             if(a===b || b.exploding || b.dead) return;
-
             let dist=Math.hypot(a.x-b.x,a.y-b.y);
             if(dist < a.radius + b.r){
                 b.exploding=true;
@@ -107,39 +103,19 @@ function update(){
             }
         });
     });
-
-    // End game when all explosions finish
+    // ✅ Save score when game ends
     if(clicked && balls.every(b=>!b.exploding || b.dead)){
         if(!gameEnded){
             gameEnded=true;
+            saveScore(score);
             setTimeout(()=>{
                 alert("Game Over! Final Score: "+score);
             },500);
         }
     }
-
     requestAnimationFrame(update);
 }
 update();
-    saveScore("player1", score);
-</script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-
-const supabaseClient = supabase.createClient(
-"https://yqzfxdczsalnergatbsa.supabase.co",
-"sb_publishable_6gehisWXq-sAgKexWCZ5Xg_B1imZwLX"
-);
-
-function saveScore(player, score) {
-  supabaseClient
-    .from("highscores")
-    .insert([{ player: player, score: score }]);
-}
-
 </script>
 </body>
-
 </html>
-
