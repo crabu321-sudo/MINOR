@@ -1,9 +1,9 @@
 <?php
 $host     = "gondola.proxy.rlwy.net";
-$port     = 17474;
+$port     = 45800;
 $dbname   = "railway";
 $username = "root";
-$password = "BZeRStGCqkiBcoRaNjnBgNDwEmsbPuqR";
+$password = "LaXOgGhdXKGaKYOfGmlXINlIaGCeFLVc";
 
 $conn = mysqli_connect($host, $username, $password, $dbname, $port);
 
