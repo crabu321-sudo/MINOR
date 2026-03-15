@@ -17,16 +17,13 @@ canvas{
 </style>
 </head>
 <body>
-
 <h2>Maze Escape</h2>
 <p>Level: <span id="level">1</span></p>
 <p>Best Level Reached: <span id="highScore">1</span></p>
 <canvas id="game" width="400" height="400"></canvas>
-
 <script>
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
-
 let player, goal;
 let walls = [];
 let level = 1;
@@ -35,7 +32,18 @@ let gameOver = false;
 let highScore = parseInt(localStorage.getItem('mazeEscapeHighLevel')) || 1;
 document.getElementById("highScore").textContent = highScore;
 
-/* ===== FIXED LEVELS ===== */
+// ✅ Save score to Railway MySQL
+function saveScore(finalScore) {
+    fetch('save_score.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `game=maze&score=${finalScore}`
+    })
+    .then(r => r.json())
+    .then(data => console.log('Score saved:', data))
+    .catch(err => console.error('Error saving score:', err));
+}
+
 const levels = {
     1: [
         {x:100,y:0,w:20,h:250},
@@ -69,25 +77,20 @@ function init(){
 
 document.addEventListener("keydown", e=>{
     if(gameOver) return;
-
     let newX = player.x;
     let newY = player.y;
-
     if(e.key==="ArrowUp") newY -= player.speed;
     if(e.key==="ArrowDown") newY += player.speed;
     if(e.key==="ArrowLeft") newX -= player.speed;
     if(e.key==="ArrowRight") newX += player.speed;
-
     if(newX < 0 || newX > 400-player.size) return;
     if(newY < 0 || newY > 400-player.size) return;
-
     let hitWall = walls.some(w =>
         newX < w.x + w.w &&
         newX + player.size > w.x &&
         newY < w.y + w.h &&
         newY + player.size > w.y
     );
-
     if(!hitWall){
         player.x = newX;
         player.y = newY;
@@ -96,25 +99,19 @@ document.addEventListener("keydown", e=>{
 
 function update(){
     ctx.clearRect(0,0,400,400);
-
     ctx.fillStyle="green";
     ctx.fillRect(goal.x, goal.y, goal.size, goal.size);
-
     ctx.fillStyle="cyan";
     ctx.fillRect(player.x, player.y, player.size, player.size);
-
     ctx.fillStyle="red";
     walls.forEach(w=>{
         ctx.fillRect(w.x,w.y,w.w,w.h);
     });
-
     if(player.x < goal.x + goal.size &&
        player.x + player.size > goal.x &&
        player.y < goal.y + goal.size &&
        player.y + player.size > goal.y){
-
         gameOver = true;
-
         setTimeout(()=>{
             if(level > highScore){
                 highScore = level;
@@ -124,41 +121,23 @@ function update(){
             } else {
                 alert(`Level ${level} completed!\nBest: ${highScore}`);
             }
-
             if(level < maxLevel){
                 level++;
                 init();
             } else {
+                // ✅ Save level as score when all levels completed
+                saveScore(level);
                 alert("🏆 You completed ALL levels!\nBest level: " + highScore);
                 level = 1;
                 init();
             }
         },200);
     }
-
     requestAnimationFrame(update);
 }
 
 init();
 update();
-    saveScore("player1", score);
-</script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-
-const supabaseClient = supabase.createClient(
-"https://yqzfxdczsalnergatbsa.supabase.co",
-"sb_publishable_6gehisWXq-sAgKexWCZ5Xg_B1imZwLX"
-);
-
-function saveScore(player, score) {
-  supabaseClient
-    .from("highscores")
-    .insert([{ player: player, score: score }]);
-}
-
 </script>
 </body>
 </html>
-
