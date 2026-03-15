@@ -63,6 +63,8 @@
             border: 1px solid rgba(0,255,255,0.22);
             backdrop-filter: blur(5px);
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            text-decoration: none;
+            color: white;
         }
         .game-card:hover {
             transform: translateY(-12px) scale(1.06);
@@ -82,7 +84,6 @@
             font-size: 1.3rem;
             font-weight: bold;
             color: rgba(255,255,255,0.7);
-            position: relative;
             overflow: hidden;
         }
         .game-image img {
@@ -118,191 +119,86 @@
 <body>
 
 <canvas id="bg" aria-hidden="true"></canvas>
-
 <header>🎮 My Gaming Platform</header>
 
 <div class="games-container">
 
-    <!-- 1. Classic Snake -->
     <a href="snake.html" class="game-card">
-        <div class="game-image">
-            <img loading="lazy" src="https://files.catbox.moe/abcdef-snake.jpg" alt="Classic Snake">
-        </div>
+        <div class="game-image">🐍</div>
         <div class="game-name">Classic Snake</div>
-        <div class="game-card">
-  ...
-  <div class="high-score">High Score: —</div>
-
-  <!-- Add this: -->
-  <h5 style="margin:10px 0 5px; color:#00ffcc;"></h5>
-  <ol id="snake-leaderboard" style="margin:0; padding-left:20px; font-size:0.95rem;"></ol>
-</div>
+        <div class="high-score" id="hs-snake">High Score: —</div>
     </a>
 
-    <!-- 2. Dino Runner -->
     <a href="dino1.html" class="game-card">
-        <div class="game-image">
-            <img loading="lazy" src="https://files.catbox.moe/abcdef-dino.jpg" alt="Dino Runner">
-        </div>
+        <div class="game-image">🦕</div>
         <div class="game-name">Dino Runner</div>
-        <div class="game-card">
-  ...
-  <div class="high-score">High Score: —</div>
-
-  <!-- Add this: -->
-  <h5 style="margin:10px 0 5px; color:#00ffcc;"></h5>
-  <ol id="dino1-leaderboard" style="margin:0; padding-left:20px; font-size:0.95rem;"></ol>
-</div>
+        <div class="high-score" id="hs-dino">High Score: —</div>
     </a>
 
-    <!-- 3. Don't Touch Red -->
     <a href="red.html" class="game-card">
-        <div class="game-image">
-            <img loading="lazy" src="https://files.catbox.moe/abcdef-touch.jpg" alt="Don't Touch Red">
-        </div>
+        <div class="game-image">🔴</div>
         <div class="game-name">Don't Touch Red</div>
-        <div class="game-card">
-  ...
-  <div class="high-score">High Score: —</div>
-
-  <!-- Add this: -->
-  <h5 style="margin:10px 0 5px; color:#00ffcc;">Top 5:</h5>
-  <ol id="red-leaderboard" style="margin:0; padding-left:20px; font-size:0.95rem;"></ol>
-</div>
+        <div class="high-score" id="hs-red">High Score: —</div>
     </a>
 
-    <!-- 4. Click the Circle -->
     <a href="circle1.html" class="game-card">
-        <div class="game-image">
-            <img loading="lazy" src="https://files.catbox.moe/abcdef-touch.jpg" alt="Click the Circle">
-        </div>
+        <div class="game-image">⭕</div>
         <div class="game-name">Click the Circle</div>
-        <div class="game-card">
-  ...
-  <div class="high-score">High Score: —</div>
-
-  <!-- Add this: -->
-  <h5 style="margin:10px 0 5px; color:#00ffcc;"></h5>
-  <ol id="circle1-leaderboard" style="margin:0; padding-left:20px; font-size:0.95rem;"></ol>
-</div>
+        <div class="high-score" id="hs-circle">High Score: —</div>
     </a>
 
-    <!-- 5. Chain Reaction -->
     <a href="chain.html" class="game-card">
-        <div class="game-image">
-            <img loading="lazy" src="https://files.catbox.moe/abcdef-chain.jpg" alt="Chain Reaction">
-        </div>
+        <div class="game-image">💥</div>
         <div class="game-name">Chain Reaction</div>
-        <div class="game-card">
-  ...
-  <div class="high-score">High Score: —</div>
-
-  <!-- Add this: -->
-  <h5 style="margin:10px 0 5px; color:#00ffcc;"></h5>
-  <ol id="chain-leaderboard" style="margin:0; padding-left:20px; font-size:0.95rem;"></ol>
-</div>
+        <div class="high-score" id="hs-chain">High Score: —</div>
     </a>
 
-    <!-- 6. Shadow Chaser -->
     <a href="shadow.html" class="game-card">
-        <div class="game-image">
-            <img loading="lazy" src="https://files.catbox.moe/abcdef-shadow.jpg" alt="Shadow Chaser">
-        </div>
+        <div class="game-image">👥</div>
         <div class="game-name">Shadow Chaser</div>
-        <div class="game-card">
-  ...
-  <div class="high-score">High Score: —</div>
-
-  <!-- Add this: -->
-  <h5 style="margin:10px 0 5px; color:#00ffcc;"></h5>
-  <ol id="shadow-leaderboard" style="margin:0; padding-left:20px; font-size:0.95rem;"></ol>
-</div>
+        <div class="high-score" id="hs-shadow">High Score: —</div>
     </a>
 
-    <!-- 7. Escape the Walls -->
     <a href="wall.html" class="game-card">
-        <div class="game-image">
-            <img loading="lazy" src="https://files.catbox.moe/abcdef-tunnel.jpg" alt="Escape the Walls">
-        </div>
+        <div class="game-image">🧱</div>
         <div class="game-name">Escape the Walls</div>
-        <div class="game-card">
-  ...
-  <div class="high-score">High Score: —</div>
-
-  <!-- Add this: -->
-  <h5 style="margin:10px 0 5px; color:#00ffcc;"></h5>
-  <ol id="wall-leaderboard" style="margin:0; padding-left:20px; font-size:0.95rem;"></ol>
-</div>
+        <div class="high-score" id="hs-wall">High Score: —</div>
     </a>
 
-    <!-- 8. Car Dodge -->
     <a href="doit.html" class="game-card">
-        <div class="game-image">
-            <img loading="lazy" src="https://files.catbox.moe/abcdef-cube.jpg" alt="Car Dodge">
-        </div>
+        <div class="game-image">🚗</div>
         <div class="game-name">Car Dodge</div>
-        <div class="game-card">
-  ...
-  <div class="high-score">High Score: —</div>
-
-  <!-- Add this: -->
-  <h5 style="margin:10px 0 5px; color:#00ffcc;"></h5>
-  <ol id="doit-leaderboard" style="margin:0; padding-left:20px; font-size:0.95rem;"></ol>
-</div>
+        <div class="high-score" id="hs-doit">High Score: —</div>
     </a>
 
-    <!-- 9. Reverse Controls -->
     <a href="reverse.html" class="game-card">
-        <div class="game-image">
-            <img loading="lazy" src="https://files.catbox.moe/abcdef-touch.jpg" alt="Reverse Controls">
-        </div>
+        <div class="game-image">🔄</div>
         <div class="game-name">Reverse Controls</div>
-        <div class="game-card">
-  ...
-  <div class="high-score">High Score: —</div>
-
-  <!-- Add this: -->
-  <h5 style="margin:10px 0 5px; color:#00ffcc;"></h5>
-  <ol id="reverse-leaderboard" style="margin:0; padding-left:20px; font-size:0.95rem;"></ol>
-</div>
+        <div class="high-score" id="hs-reverse">High Score: —</div>
     </a>
 
-    <!-- 10. Maze Escape -->
     <a href="maze.html" class="game-card">
-        <div class="game-image">
-            <img loading="lazy" src="https://files.catbox.moe/abcdef-maze.jpg" alt="Maze Escape">
-        </div>
+        <div class="game-image">🌀</div>
         <div class="game-name">Maze Escape</div>
-        <div class="game-card">
-  ...
-  <div class="high-score">High Score: —</div>
-
-  <!-- Add this: -->
-  <h5 style="margin:10px 0 5px; color:#00ffcc;"></h5>
-  <ol id="maze-leaderboard" style="margin:0; padding-left:20px; font-size:0.95rem;"></ol>
-</div>
+        <div class="high-score" id="hs-maze">High Score: —</div>
     </a>
 
-    <!-- 11. Memory Flash -->
     <a href="flash.html" class="game-card">
-        <div class="game-image">
-            <img loading="lazy" src="https://files.catbox.moe/abcdef-grid.jpg" alt="Memory Flash">
-        </div>
+        <div class="game-image">🧠</div>
         <div class="game-name">Memory Flash</div>
-        <div class="game-card">
-  ...
-  <div class="high-score">High Score: —</div>
+        <div class="high-score" id="hs-flash">High Score: —</div>
+    </a>
 
-  <!-- Add this: -->
-  <h5 style="margin:10px 0 5px; color:#00ffcc;"></h5>
-  <ol id="flash-leaderboard" style="margin:0; padding-left:20px; font-size:0.95rem;"></ol>
-</div>
+    <a href="ball.html" class="game-card">
+        <div class="game-image">🎯</div>
+        <div class="game-name">Ball Catch</div>
+        <div class="high-score" id="hs-ball">High Score: —</div>
     </a>
 
 </div>
 
 <footer>
-    © Minor Project -GROUP 1 Abhay S R, S4 Computer Engineering, MTI Thrissur
+    © Minor Project - GROUP 1 Abhay S R, S4 Computer Engineering, MTI Thrissur
 </footer>
 
 <script>
@@ -346,28 +242,21 @@ window.addEventListener("resize", () => {
     canvas.height = window.innerHeight;
 });
 
-<script type="module">
+// ✅ Fetch high scores from Railway MySQL for all games
+const games = ['snake','dino','red','circle','chain','shadow','wall','doit','reverse','maze','flash','ball'];
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "mygamingplatform-ef2e5.firebaseapp.com",
-  databaseURL: "https://mygamingplatform-ef2e5-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "mygamingplatform-ef2e5",
-  storageBucket: "mygamingplatform-ef2e5.appspot.com",
-  messagingSenderId: "624947552097",
-  appId: "YOUR_APP_ID"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
+games.forEach(game => {
+    fetch(`get_scores.php?game=${game}`)
+        .then(r => r.json())
+        .then(data => {
+            const el = document.getElementById(`hs-${game}`);
+            if(el && data.score !== null) {
+                el.textContent = `High Score: ${data.score}`;
+            }
+        })
+        .catch(err => console.error(`Error fetching score for ${game}:`, err));
+});
 </script>
+
 </body>
 </html>
-
-
-
-
