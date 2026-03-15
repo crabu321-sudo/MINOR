@@ -28,55 +28,57 @@ body{
 </style>
 </head>
 <body>
-
 <h2>Memory Flash</h2>
 <p>Level: <span id="level">1</span></p>
 <p>High Score: <span id="highScore">0</span></p>
-
 <div class="grid">
     <div class="box" data-index="0"></div>
     <div class="box" data-index="1"></div>
     <div class="box" data-index="2"></div>
     <div class="box" data-index="3"></div>
 </div>
-
 <script>
 let sequence = [];
 let playerIndex = 0;
 let level = 1;
 let highScore = parseInt(localStorage.getItem('memoryFlashHighScore')) || 0;
 let canClick = false;
-
 const boxes = document.querySelectorAll(".box");
 const levelDisplay = document.getElementById("level");
 const highScoreDisplay = document.getElementById("highScore");
 highScoreDisplay.textContent = highScore;
 
-// Start first level
+// ✅ Save score to Railway MySQL
+function saveScore(finalScore) {
+    fetch('save_score.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `game=flash&score=${finalScore}`
+    })
+    .then(r => r.json())
+    .then(data => console.log('Score saved:', data))
+    .catch(err => console.error('Error saving score:', err));
+}
+
 startLevel();
 
 function startLevel(){
     playerIndex = 0;
     canClick = false;
     levelDisplay.textContent = level;
-
     sequence.push(Math.floor(Math.random()*4));
     playSequence();
 }
 
 function playSequence(){
     let i = 0;
-
     const interval = setInterval(() => {
         const box = boxes[sequence[i]];
         box.classList.add("active");
-
         setTimeout(() => {
             box.classList.remove("active");
         }, 400);
-
         i++;
-
         if(i >= sequence.length){
             clearInterval(interval);
             setTimeout(() => {
@@ -89,13 +91,9 @@ function playSequence(){
 boxes.forEach(box => {
     box.addEventListener("click", () => {
         if(!canClick) return;
-
         const index = Number(box.dataset.index);
-
-        // Visual click effect
         box.classList.add("active");
         setTimeout(() => box.classList.remove("active"), 200);
-
         if(index === sequence[playerIndex]){
             playerIndex++;
             if(playerIndex === sequence.length){
@@ -103,6 +101,8 @@ boxes.forEach(box => {
                 setTimeout(startLevel, 800);
             }
         } else {
+            // ✅ Save level as score when game is over
+            saveScore(level);
             if (level > highScore) {
                 highScore = level;
                 localStorage.setItem('memoryFlashHighScore', highScore);
@@ -115,24 +115,6 @@ boxes.forEach(box => {
         }
     });
 });
-    saveScore("player1", score);
-</script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-
-const supabaseClient = supabase.createClient(
-"https://yqzfxdczsalnergatbsa.supabase.co",
-"sb_publishable_6gehisWXq-sAgKexWCZ5Xg_B1imZwLX"
-);
-
-function saveScore(player, score) {
-  supabaseClient
-    .from("highscores")
-    .insert([{ player: player, score: score }]);
-}
-
 </script>
 </body>
 </html>
-
