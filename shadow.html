@@ -15,30 +15,38 @@
     <p>Score: <span id="score">0</span></p>
     <p>Time Left: <span id="timer">3.0</span> s</p>
     <button onclick="location.reload()">Restart Game</button>
-
     <script>
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
     const scoreDisplay = document.getElementById("score");
     const timerDisplay = document.getElementById("timer");
-
     const player = {x: 250, y: 200, radius: 20};
     const shadow = {x: 100, y: 100, radius: 15, speed: 2};
     let score = 0;
     let maxTime = 3.0;
     let minTime = 1.0;
-    let timeLeft = maxTime;  // current countdown per round
+    let timeLeft = maxTime;
     let lastTime = Date.now();
     let gameOver = false;
 
-    // Track mouse
+    // ✅ Save score to Railway MySQL
+    function saveScore(finalScore) {
+        fetch('save_score.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `game=shadow&score=${finalScore}`
+        })
+        .then(r => r.json())
+        .then(data => console.log('Score saved:', data))
+        .catch(err => console.error('Error saving score:', err));
+    }
+
     canvas.addEventListener("mousemove", function(e){
         const rect = canvas.getBoundingClientRect();
         player.x = e.clientX - rect.left;
         player.y = e.clientY - rect.top;
     });
 
-    // Move shadow slightly randomly
     function moveShadow(){
         shadow.x += (Math.random()-0.5) * shadow.speed*2;
         shadow.y += (Math.random()-0.5) * shadow.speed*2;
@@ -46,54 +54,47 @@
         shadow.y = Math.max(shadow.radius, Math.min(canvas.height-shadow.radius, shadow.y));
     }
 
-    // Reset shadow position and round timer
     function resetShadow(){
         shadow.x = Math.random()*(canvas.width-2*shadow.radius)+shadow.radius;
         shadow.y = Math.random()*(canvas.height-2*shadow.radius)+shadow.radius;
-        timeLeft = Math.max(maxTime - score*0.2, minTime); // reduce allowed time as score increases
+        timeLeft = Math.max(maxTime - score*0.2, minTime);
         lastTime = Date.now();
     }
 
     function update(){
         if(gameOver) return;
-
-        // Timer countdown
         const now = Date.now();
-        const delta = (now - lastTime)/1000; // seconds
+        const delta = (now - lastTime)/1000;
         lastTime = now;
         timeLeft -= delta;
-
-        // Update timer display
         timerDisplay.textContent = timeLeft.toFixed(1);
 
-        // If timer reaches 0 without catching shadow → game over
         if(timeLeft <= 0){
             gameOver = true;
+            // ✅ Save score when timer runs out
+            saveScore(score);
             alert("Time's up! You didn't catch the shadow. Game Over! Score: "+score);
             return;
         }
 
         ctx.clearRect(0,0,canvas.width,canvas.height);
 
-        // Draw shadow
         ctx.fillStyle="purple";
         ctx.beginPath();
         ctx.arc(shadow.x, shadow.y, shadow.radius,0,Math.PI*2);
         ctx.fill();
 
-        // Draw player
         ctx.fillStyle="cyan";
         ctx.beginPath();
         ctx.arc(player.x, player.y, player.radius,0,Math.PI*2);
         ctx.fill();
 
-        // Check collision
         const dist = Math.hypot(player.x - shadow.x, player.y - shadow.y);
         if(dist < player.radius + shadow.radius){
             score++;
             scoreDisplay.textContent = score;
-            shadow.speed += 0.3; // shadow gets faster
-            resetShadow(); // move shadow and reset timer for next round
+            shadow.speed += 0.3;
+            resetShadow();
         }
 
         moveShadow();
@@ -102,24 +103,6 @@
 
     resetShadow();
     update();
-        saveScore("player1", score);
     </script>
-   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-
-const supabaseClient = supabase.createClient(
-"https://yqzfxdczsalnergatbsa.supabase.co",
-"sb_publishable_6gehisWXq-sAgKexWCZ5Xg_B1imZwLX"
-);
-
-function saveScore(player, score) {
-  supabaseClient
-    .from("highscores")
-    .insert([{ player: player, score: score }]);
-}
-
-</script>
 </body>
-
 </html>
