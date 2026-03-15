@@ -14,30 +14,46 @@
     <canvas id="gameCanvas" width="800" height="300"></canvas>
     <p>Score: <span id="score">0</span></p>
     <button onclick="location.reload()">Back to Home</button>
-
     <script>
-    
-    // Dino setup
-    let dino = { x:50, y:250, width:40, height:40, dy:0, gravity:0.6, jumpPower:-12 };
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const scoreDisplay = document.getElementById("score");
 
+    let dino = { x:50, y:250, width:40, height:40, dy:0, gravity:0.6, jumpPower:-12 };
     let obstacles = [];
     let score = 0;
     let gameOver = false;
+    let speed = 4;
 
-    // Starting speed
-    let speed = 4;  // slow at beginning
+    // ✅ Save score to Railway MySQL
+    function saveScore(finalScore) {
+        fetch('save_score.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `game=dino&score=${finalScore}`
+        })
+        .then(r => r.json())
+        .then(data => console.log('Score saved:', data))
+        .catch(err => console.error('Error saving score:', err));
+    }
 
-    // Jump with space
+    // High score using localStorage
+    function getHighScore() {
+        return parseInt(localStorage.getItem('dinoHighScore')) || 0;
+    }
+    function saveHighScore(s) {
+        localStorage.setItem('dinoHighScore', s);
+    }
+
     document.addEventListener("keydown", (e) => {
         if(e.code === "Space" && dino.y === 250) dino.dy = dino.jumpPower;
     });
 
-    // Obstacle class
     class Obstacle {
         constructor() {
             this.width = 30;
             this.height = 40;
-            this.x = canvas.width; // start from right edge
+            this.x = canvas.width;
             this.y = 250;
             this.passed = false;
         }
@@ -51,40 +67,32 @@
         }
     }
 
-    // Spawn obstacles at random intervals
-    function spawnObstacle() {
-        if(!gameOver) obstacles.push(new Obstacle());
-    }
     setInterval(() => {
-        if(!gameOver) spawnObstacle();
-    }, Math.random() * 1500 + 1500); // 1.5–3 sec random interval
+        if(!gameOver) obstacles.push(new Obstacle());
+    }, Math.random() * 1500 + 1500);
 
-    // Game loop
     function update() {
         if(gameOver) return;
-
         ctx.clearRect(0,0,canvas.width, canvas.height);
 
-        // Dino physics
         dino.dy += dino.gravity;
         dino.y += dino.dy;
         if(dino.y > 250) { dino.y = 250; dino.dy = 0; }
 
-        // Draw Dino
         ctx.fillStyle = "green";
         ctx.fillRect(dino.x, dino.y, dino.width, dino.height);
 
-        // Update obstacles
         for(let i = obstacles.length-1; i >= 0; i--) {
             let ob = obstacles[i];
             ob.update();
 
-            // Collision detection
             if(dino.x < ob.x + ob.width &&
                dino.x + dino.width > ob.x &&
                dino.y < ob.y + ob.height &&
                dino.y + dino.height > ob.y) {
                 gameOver = true;
+                // ✅ Save score when game is over
+                saveScore(score);
                 const high = getHighScore();
                 let msg = `Game Over! Score: ${score}`;
                 if (score > high) {
@@ -97,45 +105,18 @@
                 return;
             }
 
-            // Update score
             if(!ob.passed && ob.x + ob.width < dino.x) {
                 ob.passed = true;
                 score++;
                 scoreDisplay.textContent = score;
-
-                // Increase speed gradually every 10 points
-                if(score % 10 === 0) {
-                    speed += 1;
-                }
+                if(score % 10 === 0) speed += 1;
             }
 
-            // Remove obstacles that moved off screen
             if(ob.x + ob.width < 0) obstacles.splice(i,1);
         }
-
         requestAnimationFrame(update);
     }
-
     update();
-        saveScore("player1", score);
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-
-const supabaseClient = supabase.createClient(
-"https://yqzfxdczsalnergatbsa.supabase.co",
-"sb_publishable_6gehisWXq-sAgKexWCZ5Xg_B1imZwLX"
-);
-
-function saveScore(player, score) {
-  supabaseClient
-    .from("highscores")
-    .insert([{ player: player, score: score }]);
-}
-
-</script>
 </body>
 </html>
-
-
