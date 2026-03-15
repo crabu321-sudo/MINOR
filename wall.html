@@ -22,17 +22,14 @@ button{
 </style>
 </head>
 <body>
-
 <h2>Escape the Walls</h2>
 <p>Score: <span id="score">0</span></p>
 <canvas id="game" width="400" height="400"></canvas>
 <button onclick="location.reload()">Restart</button>
-
 <script>
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 const scoreDisplay = document.getElementById("score");
-
 let player = {x:180, y:350, width:50, height:15, speed:5};
 let wallY = 0;
 let gapX = 100;
@@ -40,83 +37,61 @@ let gapWidth = 120;
 let speed = 2;
 let score = 0;
 let gameOver = false;
-
 let keys = {};
+
+// ✅ Save score to Railway MySQL
+function saveScore(finalScore) {
+    fetch('save_score.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `game=wall&score=${finalScore}`
+    })
+    .then(r => r.json())
+    .then(data => console.log('Score saved:', data))
+    .catch(err => console.error('Error saving score:', err));
+}
 
 document.addEventListener("keydown", e => keys[e.key] = true);
 document.addEventListener("keyup", e => keys[e.key] = false);
 
 function update(){
     if(gameOver) return;
-
     ctx.clearRect(0,0,400,400);
 
-    // Move player
     if(keys["ArrowLeft"]) player.x -= player.speed;
     if(keys["ArrowRight"]) player.x += player.speed;
-
-    // Keep inside canvas
     player.x = Math.max(0, Math.min(400-player.width, player.x));
 
-    // Draw player
     ctx.fillStyle = "cyan";
     ctx.fillRect(player.x, player.y, player.width, player.height);
 
-    // Draw walls
     ctx.fillStyle = "red";
     ctx.fillRect(0, wallY, gapX, 20);
     ctx.fillRect(gapX+gapWidth, wallY, 400-(gapX+gapWidth), 20);
-
     wallY += speed;
 
-    // When wall reaches player
     if(wallY + 20 >= player.y){
-
-        // Collision check
         if(player.x < gapX || player.x + player.width > gapX + gapWidth){
             gameOver = true;
-
+            // ✅ Save score on collision
+            saveScore(score);
             ctx.fillStyle = "white";
             ctx.font = "30px Arial";
             ctx.fillText("GAME OVER", 110, 200);
-
             ctx.font = "18px Arial";
             ctx.fillText("Final Score: " + score, 140, 240);
             return;
         }
-
-        // Passed successfully → increase score
         score++;
         scoreDisplay.textContent = score;
-
-        // Reset wall
         wallY = 0;
-        gapWidth = Math.max(60, 120 - score*2); // smaller gap
+        gapWidth = Math.max(60, 120 - score*2);
         gapX = Math.random() * (400 - gapWidth);
         speed += 0.2;
     }
-
     requestAnimationFrame(update);
 }
-
 update();
-saveScore("player1", score);
-</script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-
-const supabaseClient = supabase.createClient(
-"https://yqzfxdczsalnergatbsa.supabase.co",
-"sb_publishable_6gehisWXq-sAgKexWCZ5Xg_B1imZwLX"
-);
-
-function saveScore(player, score) {
-  supabaseClient
-    .from("highscores")
-    .insert([{ player: player, score: score }]);
-}
-
 </script>
 </body>
 </html>
