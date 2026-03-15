@@ -16,24 +16,34 @@
     <p>High Score: <span id="highScore">0</span></p>
     <p>Time Left: <span id="timer">3.0</span> s</p>
     <button onclick="location.reload()">Restart Game</button>
-
     <script>
     const canvas = document.getElementById("clickCanvas");
     const ctx = canvas.getContext("2d");
     const scoreDisplay = document.getElementById("score");
     const highScoreDisplay = document.getElementById("highScore");
     const timerDisplay = document.getElementById("timer");
-
     let score = 0;
     let highScore = parseInt(localStorage.getItem('circleGameHighScore')) || 0;
     highScoreDisplay.textContent = highScore;
-    
+
     let circle = {x: 100, y: 100, radius: 30};
-    let maxTime = 3.0; // max allowed time
-    let minTime = 1.0; // minimum allowed time
-    let timeLeft = maxTime; 
+    let maxTime = 3.0;
+    let minTime = 1.0;
+    let timeLeft = maxTime;
     let lastTime = Date.now();
     let gameOver = false;
+
+    // ✅ Save score to Railway MySQL
+    function saveScore(finalScore) {
+        fetch('save_score.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `game=circle&score=${finalScore}`
+        })
+        .then(r => r.json())
+        .then(data => console.log('Score saved:', data))
+        .catch(err => console.error('Error saving score:', err));
+    }
 
     function drawCircle() {
         ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -47,21 +57,16 @@
     function randomCircle() {
         circle.x = Math.random()*(canvas.width - circle.radius*2) + circle.radius;
         circle.y = Math.random()*(canvas.height - circle.radius*2) + circle.radius;
-
-        // Set timer based on score (shrinking from 3s to 1s)
-        timeLeft = Math.max(maxTime - score*0.2, minTime); 
+        timeLeft = Math.max(maxTime - score*0.2, minTime);
         lastTime = Date.now();
-
         drawCircle();
     }
 
     canvas.addEventListener("click", function(e){
         if(gameOver) return;
-
         const rect = canvas.getBoundingClientRect();
         const mx = e.clientX - rect.left;
         const my = e.clientY - rect.top;
-
         const distance = Math.hypot(mx - circle.x, my - circle.y);
         if(distance <= circle.radius){
             score++;
@@ -72,17 +77,15 @@
 
     function update() {
         if(gameOver) return;
-
-        // Countdown timer
         const now = Date.now();
         const delta = (now - lastTime) / 1000;
         timeLeft -= delta;
         lastTime = now;
-
         timerDisplay.textContent = timeLeft.toFixed(1);
-
         if(timeLeft <= 0){
             gameOver = true;
+            // ✅ Save score when game is over
+            saveScore(score);
             if (score > highScore) {
                 highScore = score;
                 localStorage.setItem('circleGameHighScore', highScore);
@@ -93,31 +96,11 @@
             }
             return;
         }
-
         requestAnimationFrame(update);
     }
 
     randomCircle();
     update();
-        saveScore("player1", score);
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-
-const supabaseClient = supabase.createClient(
-"https://yqzfxdczsalnergatbsa.supabase.co",
-"sb_publishable_6gehisWXq-sAgKexWCZ5Xg_B1imZwLX"
-);
-
-function saveScore(player, score) {
-  supabaseClient
-    .from("highscores")
-    .insert([{ player: player, score: score }]);
-}
-
-</script>
 </body>
 </html>
-
-
