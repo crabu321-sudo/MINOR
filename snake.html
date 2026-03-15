@@ -14,21 +14,32 @@
     <canvas id="gameCanvas" width="400" height="400"></canvas>
     <p>Score: <span id="score">0</span></p>
     <button onclick="location.reload()">Restart Game</button>
-
     <script>
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
     const scoreDisplay = document.getElementById("score");
-
-    const box = 20; // size of one snake block
-    let snake = [{x: 8*box, y: 8*box}]; // initial snake
+    const box = 20;
+    let snake = [{x: 8*box, y: 8*box}];
     let food = {x: Math.floor(Math.random()*20)*box, y: Math.floor(Math.random()*20)*box};
-    let dir = "RIGHT"; // initial direction
+    let dir = "RIGHT";
     let score = 0;
-    let speed = 200; // initial speed in ms
+    let speed = 200;
     let gameOver = false;
 
+    // ✅ Save score to Railway MySQL
+    function saveScore(finalScore) {
+        fetch('save_score.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `game=snake&score=${finalScore}`
+        })
+        .then(r => r.json())
+        .then(data => console.log('Score saved:', data))
+        .catch(err => console.error('Error saving score:', err));
+    }
+
     document.addEventListener("keydown", direction);
+
     function direction(event){
         if(event.keyCode == 37 && dir !== "RIGHT") dir = "LEFT";
         else if(event.keyCode == 38 && dir !== "DOWN") dir = "UP";
@@ -38,84 +49,55 @@
 
     function draw(){
         if(gameOver) return;
-
-        // background
         ctx.fillStyle = "#000";
         ctx.fillRect(0,0,canvas.width,canvas.height);
-
-        // draw food
         ctx.fillStyle = "red";
         ctx.fillRect(food.x, food.y, box, box);
 
-        // move snake
         let headX = snake[0].x;
         let headY = snake[0].y;
-
         if(dir === "LEFT") headX -= box;
         if(dir === "RIGHT") headX += box;
         if(dir === "UP") headY -= box;
         if(dir === "DOWN") headY += box;
 
-        // check collision with wall
-        if(headX < 0 || headX >= canvas.width || headY < 0 || headY >= canvas.height) {
+        if(headX < 0 || headX >= canvas.width || headY < 0 || headY >= canvas.height){
             gameOver = true;
+            // ✅ Save score on wall collision
+            saveScore(score);
             alert("Game Over! Score: " + score);
             return;
         }
 
-        // check collision with itself
         for(let i=0;i<snake.length;i++){
             if(headX === snake[i].x && headY === snake[i].y){
                 gameOver = true;
+                // ✅ Save score on self collision
+                saveScore(score);
                 alert("Game Over! Score: " + score);
                 return;
             }
         }
 
-        // add new head
         snake.unshift({x: headX, y: headY});
 
-        // eat food
         if(headX === food.x && headY === food.y){
             score++;
             scoreDisplay.textContent = score;
-            // increase speed every 5 points
             if(score % 5 === 0 && speed > 50) speed -= 10;
-            // place new food
             food = {x: Math.floor(Math.random()*20)*box, y: Math.floor(Math.random()*20)*box};
         } else {
-            snake.pop(); // remove tail if not eating
+            snake.pop();
         }
 
-        // draw snake
         ctx.fillStyle = "lime";
         for(let i=0;i<snake.length;i++){
             ctx.fillRect(snake[i].x, snake[i].y, box, box);
         }
 
-        // next frame
         setTimeout(draw, speed);
     }
-
     draw();
-        saveScore("player1", score);
     </script>
-   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-
-const supabaseClient = supabase.createClient(
-"https://yqzfxdczsalnergatbsa.supabase.co",
-"sb_publishable_6gehisWXq-sAgKexWCZ5Xg_B1imZwLX"
-);
-
-function saveScore(player, score) {
-  supabaseClient
-    .from("highscores")
-    .insert([{ player: player, score: score }]);
-}
-
-</script>
 </body>
-
 </html>
