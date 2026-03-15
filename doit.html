@@ -14,13 +14,11 @@
     <p>Score: <span id="score">0</span></p>
     <p>High Score: <span id="highScore">0</span></p>
     <button onclick="location.reload()">Restart Game</button>
-
     <script>
     const canvas = document.getElementById("carCanvas");
     const ctx = canvas.getContext("2d");
     const scoreDisplay = document.getElementById("score");
     const highScoreDisplay = document.getElementById("highScore");
-
     const car = { x: 170, y: 450, width: 60, height: 100, dx: 15 };
     const obstacles = [];
     let score = 0;
@@ -28,8 +26,20 @@
     highScoreDisplay.textContent = highScore;
     let speed = 3;
     let gameOver = false;
-
     let keys = {};
+
+    // ✅ Save score to Railway MySQL
+    function saveScore(finalScore) {
+        fetch('save_score.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `game=flash&score=${finalScore}`
+        })
+        .then(r => r.json())
+        .then(data => console.log('Score saved:', data))
+        .catch(err => console.error('Error saving score:', err));
+    }
+
     document.addEventListener("keydown",(e)=>{ keys[e.code]=true; });
     document.addEventListener("keyup",(e)=>{ keys[e.code]=false; });
 
@@ -66,17 +76,16 @@
     function update(){
         if(gameOver) return;
         ctx.clearRect(0,0,canvas.width,canvas.height);
-
         moveCar();
         ctx.fillStyle="blue";
         ctx.fillRect(car.x,car.y,car.width,car.height);
-
         for(let i=obstacles.length-1;i>=0;i--){
             let ob=obstacles[i];
             ob.update();
-            // Check collision
             if(car.x < ob.x+ob.width && car.x+car.width > ob.x && car.y < ob.y+ob.height && car.y+car.height > ob.y){
                 gameOver=true;
+                // ✅ Save score when game is over
+                saveScore(score);
                 if (score > highScore) {
                     highScore = score;
                     localStorage.setItem('carDodgeHighScore', highScore);
@@ -90,32 +99,12 @@
                 obstacles.splice(i,1);
                 score++;
                 scoreDisplay.textContent=score;
-                if(score%5===0) speed += 0.5; // increase difficulty
+                if(score%5===0) speed += 0.5;
             }
         }
-
         requestAnimationFrame(update);
     }
-
     update();
-        saveScore("player1", score);
     </script>
-   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-
-const supabaseClient = supabase.createClient(
-"https://yqzfxdczsalnergatbsa.supabase.co",
-"sb_publishable_6gehisWXq-sAgKexWCZ5Xg_B1imZwLX"
-);
-
-function saveScore(player, score) {
-  supabaseClient
-    .from("highscores")
-    .insert([{ player: player, score: score }]);
-}
-
-</script>
 </body>
 </html>
-
